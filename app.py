@@ -1,7 +1,7 @@
 # app/main.py
 # -*- coding: utf-8 -*-
 from flask import Flask, request, redirect, url_for, session, g, flash, render_template
-
+from flask_scss import Scss
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
@@ -20,6 +20,7 @@ CALLBACK_URL = "http://127.0.0.1:5000/verify"
 app = Flask(__name__)
 app.debug = DEBUG
 app.secret_key = os.environ.get("DEVELOPMENT_KEY")
+Scss(app, static_dir='static', asset_dir='assets')
 
 
 
@@ -31,7 +32,7 @@ app.secret_key = os.environ.get("DEVELOPMENT_KEY")
 
 @app.route('/')
 def home():
-    return "Hello world."
+    return render_template('home.html')
 
 @app.route('/login')
 def get_oauth_request_token():
