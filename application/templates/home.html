@@ -1,0 +1,25 @@
+{% extends 'layout.html' %} {% block body %}
+<div class="">
+    <h1>Welcome to Squawker</h1>
+    {% if not logged_in %}
+    <a href="/login">
+        <img src="../static/images/sign-in.png" alt="Twitter Login Button">
+    </a>
+    {% endif %}
+</div>
+{% if logged_in %}
+<div class="tweet">
+    {# {% for tweet in tweets %} #}
+    <img src="{{tweet.user.profile_image_url_https}}" alt="">
+    <p>
+        {{tweet.user.name}} 
+        {% if tweet.user.verified %}
+        Y
+        {% endif %}
+        @{{tweet.user.screen_name}}
+    </p>
+    <p>{{tweet.text}}</p>
+    <p>{{tweet.retweet_count}} {{tweet.favorite_count}}</p>
+    {# {% endfor %}  #}
+</div>
+{% endif %} {% endblock %}
