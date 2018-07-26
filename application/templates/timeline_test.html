@@ -1,0 +1,17 @@
+{% extends 'layout.html' %} {% block body %}
+<div class="">
+    <h1>Welcome to Squawker</h1>
+    {% if not logged_in %}
+    <a href="/login">
+        <img src="../static/images/sign-in.png" alt="Twitter Login Button">
+    </a>
+    {% endif %}
+</div>
+{% if logged_in %}
+    {% if tweet.retweeted_status %}
+        {% include 'includes/_retweet.html' %}
+    {% else %}
+        {% include 'includes/_tweet.html' %}
+    {% endif %}
+{% endif %} 
+{% endblock %}

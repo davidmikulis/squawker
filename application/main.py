@@ -21,7 +21,7 @@ CALLBACK_URL = "http://127.0.0.1:5000/verify"
 
 # Initialize application
 app = Flask(__name__)
-from views import *
+from timeline import *
 from oauth import *
 # Load application configuration
 app.config.from_pyfile('config.cfg')
@@ -36,4 +36,4 @@ Scss(app, static_dir='static', asset_dir='assets')
  
  
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0')
+    app.run(host='0.0.0.0')
