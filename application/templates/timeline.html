@@ -10,13 +10,20 @@
 </div>
 {% if logged_in %}
 {% for tweet in tweets %}
-    {% if tweet.tweet_type == 'retweet' %}
-        {% include 'includes/_retweet.html' %}
-    {% elif tweet.tweet_type == 'quote' %}
-        {% include 'includes/_quote.html' %}
-    {% elif tweet.tweet_type == 'tweet' %}
-        {% include 'includes/_tweet.html' %}
-    {% endif %}
+    <div class="tweet-container" id="{{tweet.id_str}}">
+        <div class="profile-picture">
+            <img src="{{tweet.user.profile_image_url_https}}" alt="">
+        </div>
+        <div class="tweet-content-container">
+            {% if tweet.tweet_type == 'retweet' %}
+                {% include 'includes/_retweet.html' %}
+            {% elif tweet.tweet_type == 'quote' %}
+                {% include 'includes/_quote.html' %}
+            {% elif tweet.tweet_type == 'tweet' %}
+                {% include 'includes/_tweet.html' %}
+            {% endif %}
+        </div>
+    </div>
 {% endfor %}
 {% endif %} 
 {% endblock %}

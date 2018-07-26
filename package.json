@@ -1,0 +1,22 @@
+{
+  "name": "squawker",
+  "version": "0.1.0",
+  "description": "Squawker organizes your twitter timeline into categories.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidmikulis/squawker.git"
+  },
+  "author": "David Mikulis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidmikulis/squawker/issues"
+  },
+  "homepage": "https://github.com/davidmikulis/squawker#readme",
+  "dependencies": {
+    "node-sass": "^4.9.2"
+  }
+}

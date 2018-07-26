@@ -4,4 +4,6 @@ venv
 *.pyc
 *.cfg
 
+node_modules
+
 example_tweet.json
