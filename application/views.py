@@ -1,76 +1,60 @@
 from main import app
 from flask import request, redirect, url_for, session, g, flash, render_template
+import re
 
 # Library to assist with Twitter APIs
 import tweepy
 
 # Home page
 @app.route('/')
-def home():
+def timeline():
     logged_in = False
     auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
     key = session.get('access_token', None)
     secret = session.get('access_token_secret', None)
-    tweet_text = []
+    tweets = []
     if key and secret:
         logged_in = True
         auth.set_access_token(key, secret)
         api = tweepy.API(auth)
-        # tweets = api.home_timeline(count=1)
-        tweet = api.get_status('1021840695659843584')
-        print(tweet.text)
-        
-    return render_template('home.html', tweet=tweet, logged_in=logged_in)
+        raw_tweets = api.home_timeline(tweet_mode='extended')
+        mention_re = re.compile(r'@([\w]+)')
+        hashtag_re = re.compile(r'#([\w]+)')
+        for tweet in raw_tweets:
+            full_text = mention_re.sub(r'<a href="https://twitter.com/\1">@\1</a>', tweet.full_text)
+            full_text = hashtag_re.sub(r'<a href="https://twitter.com/hashtag/\1">#\1</a>', full_text)
+            tweet.text_list = full_text.splitlines()
+            # tweet.media_url = tweet.entities['media'][0]['media_url_https']
+            tweets.append(tweet)
+    return render_template('home.html', tweets=tweets, logged_in=logged_in)
 
-# Initiates OAuth process. User won't see this page
-@app.route('/login')
-def get_oauth_request_token():
-    CALLBACK_URL = "http://127.0.0.1:5000/verify"
-    auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'], CALLBACK_URL)
+# def timeline():
+#     logged_in = False
+#     auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
+#     key = session.get('access_token', None)
+#     secret = session.get('access_token_secret', None)
+#     if key and secret:
+#         logged_in = True
+#         auth.set_access_token(key, secret)
+#         api = tweepy.API(auth)
+#         tweet = api.get_status('1022257363833839617', tweet_mode='extended')
+#         mention_re = re.compile(r'@([\w]+)')
+#         hashtag_re = re.compile(r'#([\w]+)')
+#         full_text = mention_re.sub(r'<a href="https://twitter.com/\1">@\1</a>', tweet.full_text)
+#         full_text = hashtag_re.sub(r'<a href="https://twitter.com/hashtag/\1">#\1</a>', full_text)
+#         tweet.text_list = full_text.splitlines()
 
-    try:
-        redirect_url = auth.get_authorization_url()
-    except tweepy.TweepError:
-        print('Error! Failed to get request token.')
+#         # tweet.mention_list = [mention['id_str'] for mention in tweet.entities['user_mentions']]
+#         tweet.media_url = tweet.entities['media'][0]['media_url_https']
 
-    session['request_token'] = auth.request_token
-
-    return redirect(redirect_url)
-
-# Callback URL to obtain access token
-@app.route('/verify')
-def get_oauth_access_token():
-
-    denied = request.args.get('denied')
-    if denied:
-        return redirect(url_for('denied'))
+#         return render_template('home_test.html', 
+#             tweet=tweet, 
+#             logged_in=logged_in
+#         )
     
-    verifier = request.args['oauth_verifier']
-
-    auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
-    request_token = session['request_token']
-    del session['request_token']
-
-    auth.request_token = request_token
-
-    try:
-        auth.get_access_token(verifier)
-    except tweepy.TweepError:
-        print('Error! Failed to get access token.')
-
-    
-    api = tweepy.API(auth)
-
-    print('PRINT', auth.access_token)
-    print('PRINT', auth.access_token_secret)
-    session['access_token'] = auth.access_token
-    session['access_token_secret'] = auth.access_token_secret
-
-    return redirect(url_for('home'))
-
-@app.route('/denied')
-def denied():
-    return render_template('denied.html')
+#     return render_template('home_test.html',
+#         logged_in=logged_in
+#     )
  
 @app.route('/logout')
 def logout():

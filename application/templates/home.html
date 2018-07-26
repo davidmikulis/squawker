@@ -8,18 +8,28 @@
     {% endif %}
 </div>
 {% if logged_in %}
-<div class="tweet">
-    {# {% for tweet in tweets %} #}
-    <img src="{{tweet.user.profile_image_url_https}}" alt="">
-    <p>
-        {{tweet.user.name}} 
-        {% if tweet.user.verified %}
-        Y
+{% for tweet in tweets %}
+    <div class="tweet">
+        <img src="{{tweet.user.profile_image_url_https}}" alt="">
+        <p>
+            {{tweet.user.name}} 
+            {% if tweet.user.verified %}
+            <i class="fas fa-check-circle"></i>
+            {% endif %}
+            <a href="https://twitter.com/{{tweet.user.screen_name}}" target="_blank">@{{tweet.user.screen_name}}</a>
+        </p>
+        {% for text_line in tweet.text_list %}
+            <p>{{text_line|safe}}</p>
+        {% endfor %}
+        <p>{{tweet.id_str}}</p>
+        {% if tweet.media_url %}
+            <img src="{{tweet.media_url}}" alt="">
         {% endif %}
-        @{{tweet.user.screen_name}}
-    </p>
-    <p>{{tweet.text}}</p>
-    <p>{{tweet.retweet_count}} {{tweet.favorite_count}}</p>
-    {# {% endfor %}  #}
-</div>
+        <p>
+            <i class="far fa-comment"></i>43 
+            <i class="fas fa-retweet"></i>{{tweet.retweet_count}} 
+            <i class="far fa-heart"></i>{{tweet.favorite_count}}
+        </p>
+    </div>
+{% endfor %}
 {% endif %} {% endblock %}
