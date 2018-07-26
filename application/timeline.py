@@ -60,14 +60,20 @@ def timeline():
         for tweet in raw_tweets:
             if hasattr(tweet, 'retweeted_status'):
                 status = tweet.retweeted_status
+                tweet_type = 'retweet'
+            elif tweet.is_quote_status:
+                status = tweet
+                tweet_type = 'quote'
             else:
                 status = tweet
+                tweet_type = 'tweet'
             url_list = status.entities.get('urls', None)
             own_url, media_url = tl.datamine_media(status.entities.get('media', None))
             processed_text = tl.process_text(status.full_text, hashtag_re, mention_re, url_list, own_url)
             # Assigned mined values to tweet object
             tweet.text_list = processed_text.splitlines()
             tweet.media_url = media_url
+            tweet.tweet_type = tweet_type
             processed_tweets.append(tweet)
     return render_template('timeline.html', tweets=processed_tweets, logged_in=logged_in)
 
@@ -80,19 +86,26 @@ def timeline():
 #         logged_in = True
 #         auth.set_access_token(key, secret)
 #         api = tweepy.API(auth)
-#         tweet = api.get_status('1022522273209692162', tweet_mode='extended')
-#         hashtag_re, mention_re = generate_re()
-#         if tweet.retweeted_status:
+#         tweet = api.get_status('1022555951801487362', tweet_mode='extended')
+#         tl = Timeline()
+#         hashtag_re, mention_re = tl.generate_re()
+#         if hasattr(tweet, 'retweeted_status'):
 #             status = tweet.retweeted_status
+#             tweet_type = 'retweet'
+#         elif tweet.is_quote_status:
+#             status = tweet
+#             tweet_type = 'quote'
 #         else:
 #             status = tweet
+#             tweet_type = 'tweet'
 #         url_list = status.entities.get('urls', None)
-#         own_url, media_url = datamine_media(status.entities.get('media', None))
+#         own_url, media_url = tl.datamine_media(status.entities.get('media', None))
         
-#         processed_text = process_text(status.full_text, hashtag_re, mention_re, url_list, own_url)
+#         processed_text = tl.process_text(status.full_text, hashtag_re, mention_re, url_list, own_url)
 #         # Assigned mined/processed values to tweet object
 #         tweet.text_list = processed_text.splitlines()
 #         tweet.media_url = media_url
+#         tweet.tweet_type = tweet_type
 
 #         return render_template('timeline_test.html', 
 #             tweet=tweet, 
@@ -102,9 +115,3 @@ def timeline():
 #     return render_template('timeline_test.html',
 #         logged_in=logged_in
 #     )
- 
-# @app.route('/logout')
-# def logout():
-#     session.pop('screen_name', None)
-#     flash('You were signed out')
-#     return redirect(request.referrer or url_for('index'))

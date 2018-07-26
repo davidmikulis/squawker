@@ -1,4 +1,5 @@
-{% extends 'layout.html' %} {% block body %}
+{% extends 'layout.html' %} 
+{% block body %}
 <div class="">
     <h1>Welcome to Squawker</h1>
     {% if not logged_in %}
@@ -9,10 +10,13 @@
 </div>
 {% if logged_in %}
 {% for tweet in tweets %}
-    {% if tweet.retweeted_status %}
+    {% if tweet.tweet_type == 'retweet' %}
         {% include 'includes/_retweet.html' %}
-    {% else %}
+    {% elif tweet.tweet_type == 'quote' %}
+        {% include 'includes/_quote.html' %}
+    {% elif tweet.tweet_type == 'tweet' %}
         {% include 'includes/_tweet.html' %}
     {% endif %}
 {% endfor %}
-{% endif %} {% endblock %}
+{% endif %} 
+{% endblock %}

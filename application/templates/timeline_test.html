@@ -8,10 +8,13 @@
     {% endif %}
 </div>
 {% if logged_in %}
-    {% if tweet.retweeted_status %}
+    {% if tweet.tweet_type == 'retweet' %}
         {% include 'includes/_retweet.html' %}
-    {% else %}
+    {% elif tweet.tweet_type == 'quote' %}
+        {% include 'includes/_quote.html' %}
+    {% elif tweet.tweet_type == 'tweet' %}
         {% include 'includes/_tweet.html' %}
     {% endif %}
+    {# <p>{{tweet._json}}</p> #}
 {% endif %} 
 {% endblock %}

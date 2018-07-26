@@ -1,0 +1,28 @@
+<div class="tweet-container quote" id="{{tweet.id_str}}">
+        <img src="{{tweet.user.profile_image_url_https}}" alt="">
+        <p>
+            {{tweet.user.name}} 
+            {% if tweet.user.verified %}
+                <i class="fas fa-check-circle"></i>
+            {% endif %}
+            @{{tweet.user.screen_name}}
+        </p>
+        {% for text_line in tweet.text_list %}
+            <p>{{text_line|safe}}</p>
+        {% endfor %}
+
+        <p>
+        {{tweet.quoted_status.user.name}}
+        {% if tweet.quoted_status.user.verified %}
+            <i class="fas fa-check-circle"></i>
+        {% endif %}
+        @{{tweet.quoted_status.user.screen_name}}
+        </p>
+        {{tweet.quoted_status.full_text}}
+        {% if tweet.media_url %}
+            <img src="{{tweet.media_url}}" alt="">
+        {% endif %}
+        <p>
+            <i class="far fa-comment"></i>43 
+            <i class="fas fa-retweet"></i>{{tweet.retweet_count}} 
+            <i class="far fa-heart"></i>{{tweet.favorite_count}}
