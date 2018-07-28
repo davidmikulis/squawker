@@ -1,20 +1,15 @@
-{% extends 'layout.html' %} {% block body %}
-<div class="">
-    <h1>Welcome to Squawker</h1>
-    {% if not logged_in %}
-    <a href="/login">
-        <img src="../static/images/sign-in.png" alt="Twitter Login Button">
-    </a>
-    {% endif %}
-</div>
-{% if logged_in %}
-    {% if tweet.tweet_type == 'retweet' %}
-        {% include 'includes/_retweet.html' %}
-    {% elif tweet.tweet_type == 'quote' %}
-        {% include 'includes/_quote.html' %}
-    {% elif tweet.tweet_type == 'tweet' %}
+{% extends 'layout.html' %} 
+{% block body %}
+<div class="tweet-container" id="{{tweet.id_str}}">
+    {% include 'includes/_tweet-profile.html' %}
+    <div class="tweet-body-container">
+        {% if 'retweet' in tweet.tweet_types %}
+            {% include 'includes/_retweet-username.html' %}
+        {% endif %}
         {% include 'includes/_tweet.html' %}
-    {% endif %}
-    {# <p>{{tweet._json}}</p> #}
-{% endif %} 
+        {% if 'quote' in tweet.tweet_types %}
+            {% include 'includes/_quote.html' %}
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

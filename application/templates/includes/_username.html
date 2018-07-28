@@ -1,0 +1,7 @@
+<div class="tweet-username">
+    <span class="tweet-username__name">{{tweet.user.name}}</span>
+    {% if tweet.user.verified %}
+        <i class="fas fa-check-circle tweet-username__verified"></i>
+    {% endif %}
+    <a class="tweet-username__link" href="https://twitter.com/{{tweet.user.screen_name}}" target="_blank">@{{tweet.user.screen_name}}</a>
+</div>

@@ -41,7 +41,6 @@ def get_oauth_access_token():
 
     api = tweepy.API(auth)
 
-    print("PRINT", auth.access_token)
     session['access_token'] = auth.access_token
     session['access_token_secret'] = auth.access_token_secret
 

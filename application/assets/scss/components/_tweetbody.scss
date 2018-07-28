@@ -1,0 +1,27 @@
+.tweet-body-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.tweet-body__media-container {
+    width:100%;
+    height: 25vh;
+    margin: .3rem;
+    overflow: hidden; 
+}
+
+.tweet-body__media {
+    border-radius: 5%;
+    width: 100%;
+    height: 100%;
+}
+
+.tweet-body__text {
+
+}
+
+.tweet-body__text-line {
+    line-height: 1.3;
+}

@@ -54,27 +54,24 @@ class Timeline():
 # Timeline
 @app.route('/')
 def timeline():
-    logged_in = False
     auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
     key = session.get('access_token', None)
     secret = session.get('access_token_secret', None)
-    processed_tweets = []
     if key and secret:
-        logged_in = True
+        processed_tweets = []
         auth.set_access_token(key, secret)
         api = tweepy.API(auth)
         raw_tweets = api.home_timeline(tweet_mode='extended')
         tl = Timeline()
         for tweet in raw_tweets:
+            tweet_types = []
+            status = tweet
             if hasattr(tweet, 'retweeted_status'):
                 status = tweet.retweeted_status
-                tweet_type = 'retweet'
-            elif tweet.is_quote_status:
-                status = tweet
-                tweet_type = 'quote'
-            else:
-                status = tweet
-                tweet_type = 'tweet'
+                tweet_types.append('retweet')
+            if tweet.is_quote_status:
+                tweet_types.append('quote')
+
             url_list = status.entities.get('urls', [])
             hashtags_list = status.entities.get('hashtags', [])
             mentions_list = status.entities.get('user_mentions', [])
@@ -83,9 +80,10 @@ def timeline():
             # Assigned mined values to tweet object
             tweet.text_list = processed_text.splitlines()
             tweet.media_url = media_url
-            tweet.tweet_type = tweet_type
+            tweet.tweet_types = tweet_types
             processed_tweets.append(tweet)
-    return render_template('timeline.html', tweets=processed_tweets, logged_in=logged_in)
+        return render_template('timeline.html', tweets=processed_tweets)
+    return render_template('login.html')
 
 # Testing
 # def timeline():

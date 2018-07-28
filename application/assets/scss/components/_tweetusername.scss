@@ -1,0 +1,24 @@
+.tweet-username__name {
+    font-weight: bold;
+}
+
+.tweet-username__verified {
+    color: blue;
+}
+
+.tweet-username__link {
+    color: blue;
+}
+
+.tweet-username__link:visited {
+    color: blue;
+}
+
+.tweet-username__link:hover,
+.tweet-username__link:focus, {
+    text-decoration-line: underline;
+}
+
+.tweet-username__link:active {
+    background-color: gray;
+}

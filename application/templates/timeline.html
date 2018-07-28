@@ -1,29 +1,17 @@
 {% extends 'layout.html' %} 
 {% block body %}
-<div class="">
-    <h1>Welcome to Squawker</h1>
-    {% if not logged_in %}
-    <a href="/login">
-        <img src="../static/images/sign-in.png" alt="Twitter Login Button">
-    </a>
-    {% endif %}
-</div>
-{% if logged_in %}
 {% for tweet in tweets %}
     <div class="tweet-container" id="{{tweet.id_str}}">
-        <div class="profile-picture">
-            <img src="{{tweet.user.profile_image_url_https}}" alt="">
-        </div>
-        <div class="tweet-content-container">
-            {% if tweet.tweet_type == 'retweet' %}
-                {% include 'includes/_retweet.html' %}
-            {% elif tweet.tweet_type == 'quote' %}
+        {% include 'includes/_tweet-profile.html' %}
+        <div class="tweet-body-container">
+            {% if 'retweet' in tweet.tweet_types %}
+                {% include 'includes/_retweet-username.html' %}
+            {% endif %}
+            {% include 'includes/_tweet.html' %}
+            {% if 'quote' in tweet.tweet_types %}
                 {% include 'includes/_quote.html' %}
-            {% elif tweet.tweet_type == 'tweet' %}
-                {% include 'includes/_tweet.html' %}
             {% endif %}
         </div>
     </div>
 {% endfor %}
-{% endif %} 
 {% endblock %}

@@ -1,18 +1,11 @@
-<p>
-    {{tweet.user.name}} 
-    {% if tweet.user.verified %}
-        <i class="fas fa-check-circle"></i>
-    {% endif %}
-    <a href="https://twitter.com/{{tweet.user.screen_name}}" target="_blank">@{{tweet.user.screen_name}}</a>
-</p>
-{% for text_line in tweet.text_list %}
-    <p>{{text_line|safe}}</p>
-{% endfor %}
+<div class="tweet-body__text">
+{% include 'includes/_username.html' %}
+    {% for text_line in tweet.text_list %}
+        <p class="tweet-body__text-line">{{text_line|safe}}</p>
+    {% endfor %}
+</div>
 {% if tweet.media_url %}
-    <img src="{{tweet.media_url}}" alt="">
+    {% include 'includes/_media.html' %}
 {% endif %}
-<p>
-    <i class="far fa-comment"></i>43 
-    <i class="fas fa-retweet"></i>{{tweet.retweet_count}} 
-    <i class="far fa-heart"></i>{{tweet.favorite_count}}
-</p>
+
+{% include 'includes/_tweet-reactions.html' %}

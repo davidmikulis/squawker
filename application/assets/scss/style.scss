@@ -1,12 +1,9 @@
-@import "base/base";
 @import "abstracts/mixins";
 
-body {
-    padding: 3rem;
+@import "base/base";
 
-    @include respond(tab-port) {
-        padding: 0;
-    }
-
-    box-sizing: border-box;
-}
+@import "components/tweetbody";
+@import "components/tweetcontainer";
+@import "components/tweetprofile";
+@import "components/tweetreactions";
+@import "components/tweetusername";
