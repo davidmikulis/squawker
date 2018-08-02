@@ -1,14 +1,14 @@
 {% extends 'layout.html' %} 
 {% block body %}
 <div class="tweet-container" id="{{tweet.id_str}}">
-    {% include 'includes/_tweet-profile.html' %}
+    {% include 'includes/tweet/_tweet-profile.html' %}
     <div class="tweet-body-container">
         {% if 'retweet' in tweet.tweet_types %}
-            {% include 'includes/_retweet-username.html' %}
+            {% include 'includes/tweet/_retweet-username.html' %}
         {% endif %}
-        {% include 'includes/_tweet.html' %}
+        {% include 'includes/tweet/_tweet.html' %}
         {% if 'quote' in tweet.tweet_types %}
-            {% include 'includes/_quote.html' %}
+            {% include 'includes/tweet/_quote.html' %}
         {% endif %}
     </div>
 </div>

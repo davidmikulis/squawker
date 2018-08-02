@@ -1,0 +1,26 @@
+.user-profile-container {
+    display: flex;
+    padding: 2% 5% 2% 0;
+    border-bottom: 1px solid lightgray;
+    min-height: 10vh;
+}
+
+.user-profile-picture-container {
+    width: 20%;
+    display: flex;
+}
+
+.user-profile-picture {
+    border-radius: 100%;
+    display: block;
+    margin: 0 auto;
+    align-self: flex-start;
+}
+
+.user-profile__name {
+    font-weight: bold;
+}
+
+.user-profile__verified {
+    color: blue;
+}

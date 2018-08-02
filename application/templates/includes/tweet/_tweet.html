@@ -1,11 +1,11 @@
 <div class="tweet-body__text">
-{% include 'includes/_username.html' %}
+{% include 'includes/tweet/_username.html' %}
     {% for text_line in tweet.text_list %}
         <p class="tweet-body__text-line">{{text_line|safe}}</p>
     {% endfor %}
 </div>
-{% if tweet.media_url %}
-    {% include 'includes/_media.html' %}
+{% if tweet.media_urls %}
+    {% include 'includes/tweet/_media.html' %}
 {% endif %}
 
-{% include 'includes/_tweet-reactions.html' %}
+{% include 'includes/tweet/_tweet-reactions.html' %}

@@ -6,8 +6,10 @@ from flask import Flask
 
 # Initialize application
 app = Flask(__name__)
-from timeline import *
 from oauth import *
+from setup import *
+from timeline import *
+
 # Load application configuration
 app.config.from_pyfile('config.cfg')
 
@@ -15,4 +17,4 @@ app.config.from_pyfile('config.cfg')
 # mysql = MySQL(app)
  
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run()

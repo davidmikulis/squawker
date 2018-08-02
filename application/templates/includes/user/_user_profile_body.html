@@ -1,0 +1,8 @@
+<div class="user-profile-body-container" id="{{user.id_str}}">
+    <span class="user-profile__name">{{user.name}}</span>
+    {% if user.verified %}
+        <i class="fas fa-check-circle user-profile__verified"></i>
+    {% endif %}
+    <br>
+    <span class="user-profile__screen-name">@{{user.screen_name}}</span>
+</div>

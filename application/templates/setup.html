@@ -1,0 +1,6 @@
+{% extends 'layout.html' %} 
+{% block body %}
+{% for user in friends_list %}
+    {% include 'includes/user/_user_selectable.html' %}
+{% endfor %}
+{% endblock %}

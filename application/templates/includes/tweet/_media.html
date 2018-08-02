@@ -1,0 +1,5 @@
+<div class="tweet-body__media-container">
+    {% for media_url in tweet.media_urls %}
+    <img class="tweet-body__media" src="{{media_url}}" alt="">
+    {% endfor %}
+</div>

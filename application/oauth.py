@@ -44,7 +44,7 @@ def get_oauth_access_token():
     session['access_token'] = auth.access_token
     session['access_token_secret'] = auth.access_token_secret
 
-    return redirect(url_for('timeline'))
+    return redirect(url_for('setup'))
 
 
 @app.route('/denied')
