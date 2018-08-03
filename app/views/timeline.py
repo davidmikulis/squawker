@@ -1,4 +1,4 @@
-from main import app
+from app import app
 from flask import request, redirect, url_for, session, flash, render_template
 
 # Library to assist with Twitter APIs
@@ -52,17 +52,17 @@ class Timeline():
         print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), flush=True)
 
 # Timeline
-@app.route('/')
+@app.route('/t')
 def timeline():
-    auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
     key = session.get('access_token', None)
     secret = session.get('access_token_secret', None)
     if key and secret:
-        processed_tweets = []
+        auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
         auth.set_access_token(key, secret)
         api = tweepy.API(auth)
         raw_tweets = api.home_timeline(tweet_mode='extended')
         tl = Timeline()
+        processed_tweets = []
         for tweet in raw_tweets:
             tweet_types = []
             status = tweet

@@ -1,10 +1,12 @@
-from main import app
+from app import app
 from flask import request, redirect, url_for, session, flash, render_template 
 
 # Library to assist with Twitter APIs
 import tweepy
 
-# Page where the user sets up their squawks
+from app.models.user import UserModel
+from app.models.flock import FlockModel
+# Page where the user sets up their flocks
 
 # Check the access_token against the database, if it already
 # exists then the user has been here before on a different
@@ -24,7 +26,10 @@ def setup():
         auth.set_access_token(key, secret)
         api = tweepy.API(auth)
         raw_friends = []
-        for friend in tweepy.Cursor(api.friends).items():
-            # Process the friend here
-            raw_friends.append(friend)
-        return render_template('setup.html', friends_list=raw_friends)
+        try:
+            for friend in tweepy.Cursor(api.friends).items():
+                # Process the friend here
+                raw_friends.append(friend)
+            return render_template('setup.html', friends_list=raw_friends)
+        except tweepy.RateLimitError:
+            return render_template('rate_limit.html', action='friends')

@@ -1,14 +1,13 @@
-from main import app
+from app import app
 from flask import request, redirect, url_for, session, render_template
 
 # Library to assist with Twitter APIs
 import tweepy
 
 # Initiates OAuth process. User won't see this page
-@app.route('/login')
+@app.route('/request_token')
 def get_oauth_request_token():
-    CALLBACK_URL = "http://127.0.0.1:5000/verify"
-    auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'], CALLBACK_URL)
+    auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'], app.config['CALLBACK_URL'])
 
     try:
         redirect_url = auth.get_authorization_url()

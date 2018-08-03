@@ -3,7 +3,8 @@ venv
 .vscode
 *.pyc
 *.cfg
+data.db
 
 node_modules
-
+application/utils/obfuscator.py
 example_tweet.json
