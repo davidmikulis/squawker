@@ -54,6 +54,8 @@ class Timeline():
 # Timeline
 @app.route('/t')
 def timeline():
+    last_flock = request.args.get('flock', None)
+    print(last_flock, flush=True)
     key = session.get('access_token', None)
     secret = session.get('access_token_secret', None)
     if key and secret:

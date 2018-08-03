@@ -17,4 +17,8 @@ def deobfuscate_str(enc_str, key):
         dec.append(dec_c)
     return "".join(dec)
 
-print(obfuscate_str('user_id_1', 'somekey'))
+def obfuscate_user_id(ori_user_id, key):
+    return obfuscate_str('user_id_'+str(ori_user_id), key)
+
+def deobfuscate_user_id(enc_user_id, key):
+    return deobfuscate_str(enc_user_id, key)[8:]

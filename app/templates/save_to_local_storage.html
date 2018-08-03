@@ -1,0 +1,5 @@
+{% extends 'redirect_layout.html' %} 
+{% block body %}
+<div id="data-element" redirect="{{redirect}}" userId="{{user_id}}" accessToken="{{access_token}}"></div>
+<script src="../static/js/localStorageRedirect.js"></script>
+{% endblock %}
