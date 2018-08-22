@@ -4,7 +4,7 @@
   "description": "Squawker organizes your twitter timeline into categories.",
   "main": "index.js",
   "scripts": {
-    "compile-sass": "node-sass application/assets/scss/style.scss application/static/css/style.css -w",
+    "compile-sass": "node-sass app/assets/scss/style.scss app/static/css/style.css -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,5 +19,6 @@
   "homepage": "https://github.com/davidmikulis/squawker#readme",
   "devDependencies": {
     "node-sass": "^4.9.2"
-  }
+  },
+  "dependencies": {}
 }

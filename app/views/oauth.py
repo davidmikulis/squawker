@@ -19,7 +19,7 @@ def get_oauth_request_token():
     try:
         redirect_url = auth.get_authorization_url()
     except tweepy.TweepError:
-        print('Error! Failed to get request token.')
+        print('Error! Failed to get request token.', flush=True)
 
     session['request_token'] = auth.request_token
 
@@ -35,7 +35,6 @@ def get_oauth_access_token():
         return redirect(url_for('denied'))
     
     verifier = request.args['oauth_verifier']
-
     # Swap Request Token for Access Token
     auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
     request_token = session['request_token']
@@ -45,7 +44,7 @@ def get_oauth_access_token():
     try:
         auth.get_access_token(verifier)
     except tweepy.TweepError:
-        print('Error! Failed to get access token.')
+        print('Error! Failed to get access token.', flush=True)
 
     # Obfuscate the token and secret
     obf_access_token = obfuscate_str(auth.access_token, app.secret_key)
@@ -59,10 +58,9 @@ def get_oauth_access_token():
     user = UserModel.find_by_access_token(obf_access_token)
     if user is not None:
         # User has used this app before but on a different browser/cleared local storage
-        access_token = user.access_token
-        user_id = obfuscate_user_id(user.user_id, app.secret_key)
+        obf_user_id = obfuscate_user_id(user.user_id, app.secret_key)
         # Save User ID and Access Token to local storage and redirect to timeline
-        return redirect(url_for('save_to_local_storage', access_token=access_token, user_id=user_id, redirect='timeline'))
+        return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='timeline'))
 
     user = UserModel(obf_access_token, obf_access_token_secret)
     try:
@@ -70,12 +68,14 @@ def get_oauth_access_token():
     except:
         print('Error occured saving user to database', flush=True)
 
-    access_token = user.access_token
-    user_id = obfuscate_user_id(user.user_id, app.secret_key)
+    obf_user_id = obfuscate_user_id(user.user_id, app.secret_key)
     # Save User ID and Access Token to local storage and redirect to setup
-    return redirect(url_for('save_to_local_storage', access_token=access_token, user_id=user_id, redirect='setup'))
+    return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='setup'))
 
 
 @app.route('/denied')
 def denied():
     return render_template('denied.html')
+
+# squawker-stay-logged-in: "zdmeqpKgxZWU"
+# squawker-stay-logged-in-token: "i5pycWVul2-TcXyteZt-pGzGkJ17sOVpiH2y4KyFrY2ae7uPn4abmWGnjryQn3ePu54="

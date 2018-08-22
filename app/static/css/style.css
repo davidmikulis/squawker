@@ -91,3 +91,6 @@ body {
 
 .user-profile__verified {
   color: blue; }
+
+.setup-users-container {
+  display: flex; }

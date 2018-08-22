@@ -1,6 +1,16 @@
 {% extends 'layout.html' %} 
 {% block body %}
-{% for user in friends_list %}
-    {% include 'includes/user/_user_selectable.html' %}
-{% endfor %}
+<div class="setup-users-container">
+    <div class="available-users-container" id="available-users-container">
+        {% for user in friends_list %}
+            {% include 'includes/user/_user_selectable.html' %}
+        {% endfor %}
+    </div>
+    <div class="chosen-users-container" id="chosen-users-container">
+        {% for user in chosen_users %}
+            {% include 'includes/user/_user_selectable.html' %}
+        {% endfor %}
+    </div>
+    <script src="../static/js/setupProcessing.js"></script>
+</div>
 {% endblock %}
