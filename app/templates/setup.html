@@ -2,12 +2,12 @@
 {% block body %}
 <div class="setup-users-container">
     <div class="available-users-container" id="available-users-container">
-        {% for user in friends_list %}
+        {% for user in available_friends %}
             {% include 'includes/user/_user_selectable.html' %}
         {% endfor %}
     </div>
     <div class="chosen-users-container" id="chosen-users-container">
-        {% for user in chosen_users %}
+        {% for user in chosen_friends %}
             {% include 'includes/user/_user_selectable.html' %}
         {% endfor %}
     </div>

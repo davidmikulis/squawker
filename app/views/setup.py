@@ -41,28 +41,26 @@ def setup():
         friend_ids = api.friends_ids()
 
         # Get a list of the friends and IDs stored in the DB
-        db_friends = FriendModel.find_by_user_id_list(friend_ids)
-        db_friend_ids = [friend.user_id for friend in db_friends]
+        db_friends = FriendModel.find_by_id_str_list(friend_ids)
+        db_friend_ids = [friend.id_str for friend in db_friends]
 
         # Identify missing friends that need to be gathered from Twitter
         missing_friends = list(set(friend_ids).difference(db_friend_ids))
-        print('Missing Friends:', flush=True)
-        print(str(missing_friends), flush=True)
 
         # Setup list of friends to pass to HTML
-        raw_friends = [] + db_friends
+        available_friends = [] + db_friends
         friends_to_save = []
 
         # Gather the remaining friends from Twitter
         if len(missing_friends) > 0:
             try:
                 for f in api.lookup_users(user_ids=missing_friends):
-                    # Process the friend here
-                    raw_friends.append(f)
-                    friends_to_save.append(FriendModel(f.id, f.screen_name, f.name, f.verified, f.profile_image_url_https))
+                    available_friends.append(f)
+                    friends_to_save.append(FriendModel(f.id_str, f.screen_name, f.name, f.verified, f.profile_image_url_https))
                 if len(friends_to_save) > 0:
                     FriendModel.bulk_save_to_db(friends_to_save)
             except tweepy.RateLimitError:
                 return render_template('rate_limit.html', action='friends')
 
-        return render_template('setup.html', friends_list=raw_friends, key=deobf_key, secret=deobf_secret)
+        # Pass list of "User" object friends to HTML
+        return render_template('setup.html', available_friends=available_friends, chosen_friends=[])
