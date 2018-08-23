@@ -1,5 +1,11 @@
 {% extends 'layout.html' %} 
 {% block body %}
+<div class="setup-users-actions">
+    <button class="setup-users-actions__button button-green" id="action-button-save">Save settings</button>
+    <button class="setup-users-actions__button button-red" id="action-button-clear">Clear settings</button>
+    <button class="setup-users-actions__button button-yellow" id="action-button-load">Load a Flock</button>
+    <button class="setup-users-actions__button button-blue" id="action-button-template">Use Template</button>
+</div>
 <div class="setup-users-container">
     <div class="available-users-container" id="available-users-container">
         {% for user in available_friends %}

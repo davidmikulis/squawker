@@ -56,12 +56,53 @@ const togglePosition = (currentElement, targetColumn) => {
     }
 };
 
-const getChosenUsers = () => {
-    toastr.success('Flock saved.');
-    return Array.from(document.getElementById('chosen-users-container').children).map(child => child.id);
-};
+class ButtonSubmit {
+    static getChosenUsers() {
+        return Array.from(document.getElementById('chosen-users-container').children).map(child => child.id);
+    }
 
+    static getAvailableUsers() {
+        return Array.from(document.getElementById('available-users-container').children).map(child => child.id);
+    }
+
+
+    static createHiddenForm(action) {
+        const form = document.createElement('form');
+        form.setAttribute('id', action+'-button-post');
+        form.setAttribute('method', 'post');
+        form.style.setProperty('display', 'none');
+        document.body.appendChild(form);
+        return form;
+    }
+
+    static createHiddenInput(name, value, form) {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'hidden');
+        input.setAttribute('name', name);
+        input.setAttribute('value', value);
+        form.appendChild(input);
+    }
+
+    static saveButton() {
+        const form = this.createHiddenForm('save');
+        const name = this.createHiddenInput('name', 'professional', form);
+        const chosenFriends = this.createHiddenInput(
+            'chosen_friends', JSON.stringify(this.getChosenUsers()), form);
+        const availableFriends = this.createHiddenInput(
+            'available_friends', JSON.stringify(this.getAvailableUsers()), form);
+        form.submit();
+    }
+
+    static clearButton() {}
+    static loadButton() {}
+    static templateButton() {}
+    
+}
+ 
 window.onload = function() {
     const clickableProfiles = document.querySelectorAll('div.user-profile-container');
     clickableProfiles.forEach(profile => profile.addEventListener('click', toggleButton));
+    ['save', 'clear', 'load', 'template'].forEach(name => 
+        document.getElementById('action-button-'+name).addEventListener('click', ButtonSubmit[name+'Button'].bind(ButtonSubmit))
+    );
 };

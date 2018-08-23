@@ -1,6 +1,6 @@
 from app import app
 from flask import request, redirect, url_for, session, flash, render_template 
-
+import json
 # Library to assist with Twitter APIs
 import tweepy
 
@@ -22,16 +22,31 @@ from app.models.friend import FriendModel
 # retrieve what we can. 
 # Ask Twitter for the remaining friends
 
+# On 'GET', check for their latest flock, and send back those friends
+# If no latest flock, send back all friends
+
+# On 'POST', gather the flock that the user sent and save it to the database
+# Return the same page with a success message
+
 class Setup():
     pass
 
 # Setup
 @app.route('/setup', methods=['GET', 'POST'])
 def setup():
-    auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
-    key = session.get('access_token', None)
-    secret = session.get('access_token_secret', None)
-    if key and secret:
+    if request.method == 'POST':
+        flock_name = request.form.get('name', '')
+        available_friend_ids = json.loads(request.form.get('available_friends', '[]'))
+        chosen_friend_ids = json.loads(request.form.get('chosen_friends', '[]'))
+        return render_template('setup.html', available_friends=available_friends, chosen_friends=chosen_friends)
+
+    if request.method == 'GET':
+        auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
+        key = session.get('access_token', None)
+        secret = session.get('access_token_secret', None)
+        if key is None or secret is None:
+            return redirect(url_for('login'))
+        
         deobf_key = deobfuscate_str(key, app.secret_key)
         deobf_secret = deobfuscate_str(secret, app.secret_key)
         auth.set_access_token(deobf_key, deobf_secret)
