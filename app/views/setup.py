@@ -38,7 +38,39 @@ def setup():
         flock_name = request.form.get('name', '')
         available_friend_ids = json.loads(request.form.get('available_friends', '[]'))
         chosen_friend_ids = json.loads(request.form.get('chosen_friends', '[]'))
-        return render_template('setup.html', available_friends=available_friends, chosen_friends=chosen_friends)
+
+        # Get user from DB for user ID
+        user = UserModel.find_by_access_token(session.get('access_token'))
+        user_id = user.user_id
+
+        # Save flock to DB
+        flock = FlockModel.find_by_name(user_id, flock_name)
+        if flock is not None:
+            flock.config = {'chosen_friend_ids': chosen_friend_ids}
+        else:
+            flock = FlockModel(user_id, flock_name, {'chosen_friend_ids': chosen_friend_ids})
+
+        try:
+            saved_flock = flock.save_to_db()
+        except:
+            print('Error saving flock to database.', flush=True)
+
+        # Save latest flock to user
+        user.last_flock = saved_flock.flock_id
+        try:
+            saved_user = user.save_to_db()
+        except:
+            print('Error saving last flock to user in database.')
+
+        # Turn the received IDs back into "Friend objects" from DB
+        available_friends = FriendModel.find_by_id_str_list(available_friend_ids)
+        chosen_friends = FriendModel.find_by_id_str_list(chosen_friend_ids)
+
+        return render_template('setup.html', 
+            available_friends=available_friends, 
+            chosen_friends=chosen_friends,
+            flock_name=saved_flock.name
+            )
 
     if request.method == 'GET':
         auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
@@ -78,4 +110,8 @@ def setup():
                 return render_template('rate_limit.html', action='friends')
 
         # Pass list of "User" object friends to HTML
-        return render_template('setup.html', available_friends=available_friends, chosen_friends=[])
+        return render_template('setup.html', 
+            available_friends=available_friends, 
+            chosen_friends=[], 
+            flock_name=''
+            )

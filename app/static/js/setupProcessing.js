@@ -57,6 +57,13 @@ const togglePosition = (currentElement, targetColumn) => {
 };
 
 class ButtonSubmit {
+
+    static async fetch(url) {
+        const response = await fetch(url);
+        if (response.ok) return await response.json();
+        throw new Error(response.status);
+    }
+
     static getChosenUsers() {
         return Array.from(document.getElementById('chosen-users-container').children).map(child => child.id);
     }
@@ -85,24 +92,48 @@ class ButtonSubmit {
 
     static saveButton() {
         const form = this.createHiddenForm('save');
-        const name = this.createHiddenInput('name', 'professional', form);
+        const inputName = document.getElementById('setup-users-name-input').value;
+        if (!inputName) {
+            alert('Flock Name must be specified.');
+            return;
+        }
+        const name = this.createHiddenInput('name', inputName, form);
+        const chosenUsersIds = this.getChosenUsers();
+        if (chosenUsersIds.length < 1) {
+            alert('Must choose at least one user.');
+            return;
+        } 
         const chosenFriends = this.createHiddenInput(
-            'chosen_friends', JSON.stringify(this.getChosenUsers()), form);
+            'chosen_friends', JSON.stringify(chosenUsersIds), form);
         const availableFriends = this.createHiddenInput(
             'available_friends', JSON.stringify(this.getAvailableUsers()), form);
         form.submit();
     }
 
-    static clearButton() {}
-    static loadButton() {}
-    static templateButton() {}
+    static clearButton() {
+        const chosenUsers = Array.from(document.getElementById('chosen-users-container').children);
+        const availableColumn = document.getElementById('available-users-container');
+        chosenUsers.forEach(user => availableColumn.appendChild(user));
+    }
+
+    static loadButton() {
+        // Send 'GET' to server to get list of flocks in DB
+    }
+
+    static confirmLoadButton() {
+        // Send 'GET' to server to get details of specific flock (available_users, chosen_users
+    }
+
+    static timelineButton() {
+        // Send 'GET' to server to get list of flocks in DB
+    }
     
 }
  
 window.onload = function() {
     const clickableProfiles = document.querySelectorAll('div.user-profile-container');
     clickableProfiles.forEach(profile => profile.addEventListener('click', toggleButton));
-    ['save', 'clear', 'load', 'template'].forEach(name => 
+    ['save', 'clear', 'load', 'timeline'].forEach(name => 
         document.getElementById('action-button-'+name).addEventListener('click', ButtonSubmit[name+'Button'].bind(ButtonSubmit))
     );
 };

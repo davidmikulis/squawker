@@ -7,6 +7,9 @@ import tweepy
 # Date and time libraries
 from datetime import datetime
 
+# Obfuscator utility
+from app.utils.obfuscator import deobfuscate_str
+
 
 class Timeline():
     def datamine_media(self, media):
@@ -55,9 +58,10 @@ class Timeline():
 @app.route('/t')
 def timeline():
     last_flock = request.args.get('flock', None)
-    print(last_flock, flush=True)
-    key = session.get('access_token', None)
-    secret = session.get('access_token_secret', None)
+    obf_key = session.get('access_token', None)
+    obf_secret = session.get('access_token_secret', None)
+    key = deobfuscate_str(obf_key, app.secret_key)
+    secret = deobfuscate_str(obf_secret, app.secret_key)
     if key and secret:
         auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
         auth.set_access_token(key, secret)

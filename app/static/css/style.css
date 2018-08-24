@@ -249,6 +249,15 @@ body {
     height: 75%;
     padding: 3px; }
 
+.setup-users-name {
+  width: 100%;
+  position: sticky;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgray;
+  top: 5rem; }
+
 .setup-users-container {
   display: flex;
   margin-top: 1px;
