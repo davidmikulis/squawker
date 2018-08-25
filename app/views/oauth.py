@@ -56,17 +56,17 @@ def get_oauth_access_token():
 
     # Check if this user has used the app before
     user = UserModel.find_by_access_token(obf_access_token)
-    if user is not None:
+    if user is not None and user.last_flock:
         # User has used this app before but on a different browser/cleared local storage
         obf_user_id = obfuscate_user_id(user.user_id, app.secret_key)
         # Save User ID and Access Token to local storage and redirect to timeline
         return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='timeline'))
-
-    user = UserModel(obf_access_token, obf_access_token_secret)
-    try:
-        user.save_to_db()
-    except:
-        print('Error occured saving user to database', flush=True)
+    else:
+        user = UserModel(obf_access_token, obf_access_token_secret)
+        try:
+            user.save_to_db()
+        except:
+            print('Error occured saving user to database', flush=True)
 
     obf_user_id = obfuscate_user_id(user.user_id, app.secret_key)
     # Save User ID and Access Token to local storage and redirect to setup

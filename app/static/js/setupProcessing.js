@@ -72,7 +72,6 @@ class ButtonSubmit {
         return Array.from(document.getElementById('available-users-container').children).map(child => child.id);
     }
 
-
     static createHiddenForm(action) {
         const form = document.createElement('form');
         form.setAttribute('id', action+'-button-post');
@@ -118,10 +117,14 @@ class ButtonSubmit {
 
     static loadButton() {
         // Send 'GET' to server to get list of flocks in DB
+        const user_id = localStorage.getItem('squawker-stay-logged-in');
+        const access_token = localStorage.getItem('squawker-stay-logged-in-token');
+        const url = `http://127.0.0.1:5000/get/flock_names/${user_id}/${access_token}`;
+        this.fetch(url).then(data => console.log(data.flock_names));
     }
 
     static confirmLoadButton() {
-        // Send 'GET' to server to get details of specific flock (available_users, chosen_users
+        // Send 'GET' to server to get details of specific flock (available_users, chosen_users)
     }
 
     static timelineButton() {

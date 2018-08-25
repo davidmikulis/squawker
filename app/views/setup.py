@@ -56,13 +56,14 @@ def setup():
             print('Error saving flock to database.', flush=True)
 
         # Save latest flock to user
-        user.last_flock = saved_flock.flock_id
+        user.last_flock_id = saved_flock.flock_id
         try:
             saved_user = user.save_to_db()
         except:
             print('Error saving last flock to user in database.')
 
-        # Turn the received IDs back into "Friend objects" from DB
+        # Turn the received IDs back into "Friend objects" from DB to re-render
+        # Can refactor later to use session to avoid DB call
         available_friends = FriendModel.find_by_id_str_list(available_friend_ids)
         chosen_friends = FriendModel.find_by_id_str_list(chosen_friend_ids)
 
@@ -85,33 +86,41 @@ def setup():
         api = tweepy.API(auth)
 
         # Gather list of all IDs for friends to show
-        friend_ids = api.friends_ids()
-
+        friend_ids = [str(_id) for _id in api.friends_ids()]
         # Get a list of the friends and IDs stored in the DB
         db_friends = FriendModel.find_by_id_str_list(friend_ids)
         db_friend_ids = [friend.id_str for friend in db_friends]
-
         # Identify missing friends that need to be gathered from Twitter
         missing_friends = list(set(friend_ids).difference(db_friend_ids))
-
-        # Setup list of friends to pass to HTML
-        available_friends = [] + db_friends
+        all_friends = [] + db_friends
         friends_to_save = []
 
         # Gather the remaining friends from Twitter
         if len(missing_friends) > 0:
             try:
                 for f in api.lookup_users(user_ids=missing_friends):
-                    available_friends.append(f)
+                    all_friends.append(f)
                     friends_to_save.append(FriendModel(f.id_str, f.screen_name, f.name, f.verified, f.profile_image_url_https))
                 if len(friends_to_save) > 0:
                     FriendModel.bulk_save_to_db(friends_to_save)
             except tweepy.RateLimitError:
                 return render_template('rate_limit.html', action='friends')
 
+        # Get user from DB for user ID
+        user = UserModel.find_by_access_token(session.get('access_token'))
+        if user.last_flock_id:
+            flock_name = user.last_flock().name
+            chosen_friend_ids = user.last_flock().chosen_ids()
+            chosen_friends = [friend for friend in all_friends if friend.id_str in chosen_friend_ids]
+            available_friends = [friend for friend in all_friends if friend.id_str not in chosen_friend_ids]
+        else:
+            available_friends = all_friends
+            chosen_friends = []
+            flock_name = ''
+
         # Pass list of "User" object friends to HTML
         return render_template('setup.html', 
             available_friends=available_friends, 
-            chosen_friends=[], 
-            flock_name=''
+            chosen_friends=chosen_friends, 
+            flock_name=flock_name
             )

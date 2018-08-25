@@ -4,11 +4,12 @@ class FriendModel(db.Model):
     __tablename__ = 'friends'
 
     key = db.Column(db.Integer, primary_key=True)
-    id_str = db.Column(db.Integer)
+    id_str = db.Column(db.String(24))
     screen_name = db.Column(db.String(16))
     name = db.Column(db.String(64))
     verified = db.Column(db.Boolean)
     profile_image_url_https = db.Column(db.String(128))
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     def __init__(self, id_str, screen_name, name, verified, profile_image_url_https):
         self.id_str = id_str
