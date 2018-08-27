@@ -2,7 +2,9 @@
 {% block body %}
 {% for tweet in tweets %}
     <div class="tweet-container" id="{{tweet.id_str}}">
-        {% include 'includes/user/_user_profile_picture.html' %}
+        {% with user = tweet.user %}
+            {% include 'includes/user/_user_profile_picture.html' %}
+        {% endwith %}
         <div class="tweet-body-container">
             {% if 'retweet' in tweet.tweet_types %}
                 {% include 'includes/tweet/_retweet-username.html' %}

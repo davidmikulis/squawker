@@ -56,7 +56,7 @@ def get_oauth_access_token():
 
     # Check if this user has used the app before
     user = UserModel.find_by_access_token(obf_access_token)
-    if user is not None and user.last_flock:
+    if user is not None and user.last_flock_id:
         # User has used this app before but on a different browser/cleared local storage
         obf_user_id = obfuscate_user_id(user.user_id, app.secret_key)
         # Save User ID and Access Token to local storage and redirect to timeline

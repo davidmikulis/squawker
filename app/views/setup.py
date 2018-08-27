@@ -21,6 +21,7 @@ from app.models.friend import FriendModel
 # Before retrieving friend data, check database for friend IDs and
 # retrieve what we can. 
 # Ask Twitter for the remaining friends
+# TODO: Cache friend IDs in session variable
 
 # On 'GET', check for their latest flock, and send back those friends
 # If no latest flock, send back all friends

@@ -12,7 +12,6 @@ def user(user_id, access_token):
     deobf_user_id = deobfuscate_user_id(user_id, app.secret_key)
     user = UserModel.find_by_id_and_token(deobf_user_id, access_token)
 
-    print(user.json_me(), flush=True)
     if user is None:
         response = {
             "error": "User not found."

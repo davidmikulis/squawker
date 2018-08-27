@@ -7,11 +7,17 @@ import tweepy
 # Date and time libraries
 from datetime import datetime
 
+# Database models
+from app.models.user import UserModel
+
 # Obfuscator utility
 from app.utils.obfuscator import deobfuscate_str
 
 
 class Timeline():
+    def apply_flock_filter(self, raw_tweets, friend_ids):
+        return [tweet for tweet in raw_tweets if tweet.user.id_str in friend_ids]
+
     def datamine_media(self, media):
         if media is not None:
             own_url = media[0].get('url', None)
@@ -57,78 +63,45 @@ class Timeline():
 # Timeline
 @app.route('/t')
 def timeline():
-    last_flock = request.args.get('flock', None)
     obf_key = session.get('access_token', None)
     obf_secret = session.get('access_token_secret', None)
+    if obf_key is None or obf_secret is None:
+        return render_template('login.html')
+    # Read user from request or search DB
+    user = request.args.get('user', None)
+    if user is None:
+        user = UserModel.find_by_access_token(obf_key)
+    # Prepare to use Twitter API
+    auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
     key = deobfuscate_str(obf_key, app.secret_key)
     secret = deobfuscate_str(obf_secret, app.secret_key)
-    if key and secret:
-        auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
-        auth.set_access_token(key, secret)
-        api = tweepy.API(auth)
-        raw_tweets = api.home_timeline(tweet_mode='extended')
-        tl = Timeline()
-        processed_tweets = []
-        for tweet in raw_tweets:
-            tweet_types = []
-            status = tweet
-            if hasattr(tweet, 'retweeted_status'):
-                status = tweet.retweeted_status
-                tweet_types.append('retweet')
-            if hasattr(tweet, 'quoted_status'):
-                tweet_types.append('quote')
+    auth.set_access_token(key, secret)
+    api = tweepy.API(auth)
+    tl = Timeline()
+    # Acquire tweets from Twitter and filter by flock members
+    raw_tweets = api.home_timeline(tweet_mode='extended', count=200)
+    print(len(raw_tweets), flush=True)
+    filtered_tweets = tl.apply_flock_filter(raw_tweets, user.last_flock().chosen_ids())
+    print(len(filtered_tweets), flush=True)
+    # Perform additional processing on the Tweet objects
+    processed_tweets = []
+    for tweet in filtered_tweets:
+        tweet_types = []
+        status = tweet
+        if hasattr(tweet, 'retweeted_status'):
+            status = tweet.retweeted_status
+            tweet_types.append('retweet')
+        if hasattr(tweet, 'quoted_status'):
+            tweet_types.append('quote')
 
-            url_list = status.entities.get('urls', [])
-            hashtags_list = status.entities.get('hashtags', [])
-            mentions_list = status.entities.get('user_mentions', [])
-            own_url, media_urls = tl.datamine_media(status.entities.get('media', None))
-            processed_text = tl.process_text(status.full_text, hashtags_list, mentions_list, url_list, own_url)
-            # Assigned mined values to tweet object
-            tweet.text_list = processed_text.splitlines()
-            tweet.media_urls = media_urls
-            tweet.tweet_types = tweet_types
-            processed_tweets.append(tweet)
-        return render_template('timeline.html', tweets=processed_tweets)
-    return render_template('login.html')
-
-# Testing
-# def timeline():
-#     logged_in = False
-#     auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
-#     key = session.get('access_token', None)
-#     secret = session.get('access_token_secret', None)
-#     if key and secret:
-#         logged_in = True
-#         auth.set_access_token(key, secret)
-#         api = tweepy.API(auth)
-#         tweet = api.get_status('1022555951801487362', tweet_mode='extended')
-#         tl = Timeline()
-#         if hasattr(tweet, 'retweeted_status'):
-#             status = tweet.retweeted_status
-#             tweet_type = 'retweet'
-#         elif tweet.is_quote_status:
-#             status = tweet
-#             tweet_type = 'quote'
-#         else:
-#             status = tweet
-#             tweet_type = 'tweet'
-#         url_list = status.entities.get('urls', None)
-#         hashtags_list = status.entities.get('hashtags', None)
-#         mentions_list = status.entities.get('user_mentions', None)
-#         own_url, media_url = tl.datamine_media(status.entities.get('media', None))
-#         print(status.full_text, flush=True)
-#         processed_text = tl.process_text(status.full_text, hashtags_list, mentions_list, url_list, own_url)
-#         # Assigned mined/processed values to tweet object
-#         tweet.text_list = processed_text.splitlines()
-#         tweet.media_url = media_url
-#         tweet.tweet_type = tweet_type
-#         tweet.time_stamp_str = tl.time_stamp_str(tweet.created_at)
-
-#         return render_template('timeline_test.html', 
-#             tweet=tweet, 
-#             logged_in=logged_in
-#         )
-    
-#     return render_template('timeline_test.html',
-#         logged_in=logged_in
-#     )
+        url_list = status.entities.get('urls', [])
+        hashtags_list = status.entities.get('hashtags', [])
+        mentions_list = status.entities.get('user_mentions', [])
+        own_url, media_urls = tl.datamine_media(status.entities.get('media', None))
+        processed_text = tl.process_text(status.full_text, hashtags_list, mentions_list, url_list, own_url)
+        # Assigned mined values to tweet object
+        tweet.text_list = processed_text.splitlines()
+        tweet.media_urls = media_urls
+        tweet.tweet_types = tweet_types
+        processed_tweets.append(tweet)
+    return render_template('timeline.html', tweets=processed_tweets)
