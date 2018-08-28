@@ -1,7 +1,7 @@
 {
   "name": "squawker",
   "version": "0.1.0",
-  "description": "Squawker organizes your twitter timeline into categories.",
+  "description": "Squawker organizes your Twitter timeline into categories.",
   "main": "index.js",
   "scripts": {
     "compile-sass": "node-sass app/assets/scss/style.scss app/static/css/style.css -w",

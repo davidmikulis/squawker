@@ -1,19 +1,30 @@
 {% extends 'layout.html' %} 
 {% block body %}
-{% for tweet in tweets %}
-    <div class="tweet-container" id="{{tweet.id_str}}">
-        {% with user = tweet.user %}
-            {% include 'includes/user/_user_profile_picture.html' %}
-        {% endwith %}
-        <div class="tweet-body-container">
-            {% if 'retweet' in tweet.tweet_types %}
-                {% include 'includes/tweet/_retweet-username.html' %}
-            {% endif %}
-            {% include 'includes/tweet/_tweet.html' %}
-            {% if 'quote' in tweet.tweet_types %}
-                {% include 'includes/tweet/_quote.html' %}
-            {% endif %}
-        </div>
+<div class="timeline-header" id="timeline-header">
+    <div class="timeline-header-picture-container">
+        <img class="user-profile-picture" src="{{my_profile_picture}}" alt="My Profile Picture">
     </div>
-{% endfor %}
+    <div class="timeline-header-body-container">
+        <span class="timeline-header-flock-name">{{flock_name}}</span>
+    </div>
+</div>
+<div class="timeline-container">
+    {% for tweet in tweets %}
+        <div class="tweet-container" id="{{tweet.id_str}}">
+            {% with user = tweet.user %}
+                {% include 'includes/user/_user_profile_picture.html' %}
+            {% endwith %}
+            <div class="tweet-body-container">
+                {% if 'retweet' in tweet.tweet_types %}
+                    {% include 'includes/tweet/_retweet-username.html' %}
+                {% endif %}
+                {% include 'includes/tweet/_tweet.html' %}
+                {% if 'quote' in tweet.tweet_types %}
+                    {% include 'includes/tweet/_quote.html' %}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<script src="../static/js/timeline.js"></script>
 {% endblock %}

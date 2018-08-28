@@ -6,7 +6,8 @@
   box-sizing: inherit; }
 
 html {
-  font-size: 62.5%; }
+  font-size: 62.5%;
+  font-family: 'Roboto', sans-serif; }
 
 body {
   box-sizing: border-box; }
@@ -155,6 +156,30 @@ body {
   margin: -1px 8px 0 -4px;
   vertical-align: top; }
 
+.timeline-header {
+  background: white;
+  height: 6rem;
+  position: fixed;
+  top: 0;
+  transition: top 0.2s ease-in-out;
+  width: 100%;
+  display: flex;
+  padding: 2% 5% 2% 0;
+  border-bottom: 1px solid lightgray;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  min-height: 10vh; }
+  .timeline-header-picture-container {
+    width: 20%;
+    display: flex; }
+  .timeline-header-body-container {
+    display: flex;
+    align-items: center; }
+  .timeline-header-flock-name {
+    font-size: 2rem;
+    font-weight: bold; }
+  .timeline-header--hide-up {
+    top: -7rem; }
+
 .tweet-body-container {
   width: 80%;
   display: flex;
@@ -268,3 +293,6 @@ body {
 
 .chosen-users-container {
   width: 50%; }
+
+.timeline-container {
+  padding-top: 6rem; }

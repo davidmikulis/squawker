@@ -1,0 +1,33 @@
+.timeline-header {
+    background: $color-white;
+    height: $timeline-header-height;
+    position: fixed;
+    top: 0;
+    transition: top 0.2s ease-in-out;
+    width: 100%;
+
+    display: flex;
+    padding: 2% 5% 2% 0;
+    border-bottom: 1px solid lightgray;
+    box-shadow: 0 2px 3px rgba(black, 0.2);
+    min-height: 10vh;
+
+    &-picture-container {
+        width: 20%;
+        display: flex;
+    }
+
+    &-body-container {
+        display: flex;
+        align-items: center;
+    }
+
+    &-flock-name {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    &--hide-up {
+        top: -$timeline-header-height - 1rem;
+    }
+}

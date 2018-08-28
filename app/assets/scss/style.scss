@@ -1,8 +1,10 @@
 @import "abstracts/mixins";
+@import "abstracts/variables";
 
 @import "base/base";
 
 @import "components/button";
+@import "components/timeline-header";
 @import "components/tweetbody";
 @import "components/tweetcontainer";
 @import "components/tweetquote";
@@ -12,3 +14,4 @@
 @import "components/userprofile";
 
 @import "pages/setup";
+@import "pages/timeline";

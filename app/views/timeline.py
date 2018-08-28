@@ -78,11 +78,14 @@ def timeline():
     auth.set_access_token(key, secret)
     api = tweepy.API(auth)
     tl = Timeline()
+    # Get the logged in user profile picture
+    me = api.me()
+    my_profile_picture = me.profile_image_url_https
+    # Get the current flock name
+    flock_name = user.last_flock().name
     # Acquire tweets from Twitter and filter by flock members
     raw_tweets = api.home_timeline(tweet_mode='extended', count=200)
-    print(len(raw_tweets), flush=True)
     filtered_tweets = tl.apply_flock_filter(raw_tweets, user.last_flock().chosen_ids())
-    print(len(filtered_tweets), flush=True)
     # Perform additional processing on the Tweet objects
     processed_tweets = []
     for tweet in filtered_tweets:
@@ -104,4 +107,8 @@ def timeline():
         tweet.media_urls = media_urls
         tweet.tweet_types = tweet_types
         processed_tweets.append(tweet)
-    return render_template('timeline.html', tweets=processed_tweets)
+    return render_template('timeline.html', 
+        tweets=processed_tweets, 
+        my_profile_picture=my_profile_picture,
+        flock_name=flock_name
+        )

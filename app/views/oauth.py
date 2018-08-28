@@ -61,14 +61,20 @@ def get_oauth_access_token():
         obf_user_id = obfuscate_user_id(user.user_id, app.secret_key)
         # Save User ID and Access Token to local storage and redirect to timeline
         return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='timeline'))
-    else:
-        user = UserModel(obf_access_token, obf_access_token_secret)
-        try:
-            user.save_to_db()
-        except:
-            print('Error occured saving user to database', flush=True)
+    elif user is not None:
+        # User has used this app before but never saved a flock
+        obf_user_id = obfuscate_user_id(user.user_id, app.secret_key)
+        # Save User ID and Access Token to local storage and redirect to setup
+        return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='setup'))
+    
+    # User hasn't used this app before
+    new_user = UserModel(obf_access_token, obf_access_token_secret)
+    try:
+        saved_user = new_user.save_to_db()
+    except:
+        print('Error occured saving user to database', flush=True)
 
-    obf_user_id = obfuscate_user_id(user.user_id, app.secret_key)
+    obf_user_id = obfuscate_user_id(saved_user.user_id, app.secret_key)
     # Save User ID and Access Token to local storage and redirect to setup
     return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='setup'))
 
@@ -76,6 +82,3 @@ def get_oauth_access_token():
 @app.route('/denied')
 def denied():
     return render_template('denied.html')
-
-# squawker-stay-logged-in: "zdmeqpKgxZWU"
-# squawker-stay-logged-in-token: "i5pycWVul2-TcXyteZt-pGzGkJ17sOVpiH2y4KyFrY2ae7uPn4abmWGnjryQn3ePu54="
