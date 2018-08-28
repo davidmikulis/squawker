@@ -63,6 +63,7 @@ def setup():
         except:
             print('Error saving last flock to user in database.')
 
+        flash(f'Flock "{flock_name}" has been saved.', 'success')
         # Turn the received IDs back into "Friend objects" from DB to re-render
         # Can refactor later to use session to avoid DB call
         available_friends = FriendModel.find_by_id_str_list(available_friend_ids)

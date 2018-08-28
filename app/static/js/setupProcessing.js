@@ -132,6 +132,16 @@ class ButtonSubmit {
     }
     
 }
+
+const setupFlashAlertFade = () => {
+    const alerts = document.getElementsByClassName('flash-alert');
+    if (alerts.length > 0) {
+        for (let i = 0; i < alerts.length; i++) {
+            alerts[i].addEventListener('transitionend', () => element.style.setProperty('display', 'none'));
+            alerts[i].classList.add('flash-alert-fade-out');
+        }
+    }
+}
  
 window.onload = function() {
     const clickableProfiles = document.querySelectorAll('div.user-profile-container');
@@ -139,4 +149,6 @@ window.onload = function() {
     ['save', 'clear', 'load', 'timeline'].forEach(name => 
         document.getElementById('action-button-'+name).addEventListener('click', ButtonSubmit[name+'Button'].bind(ButtonSubmit))
     );
+
+    setupFlashAlertFade();
 };

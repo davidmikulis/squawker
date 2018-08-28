@@ -156,12 +156,47 @@ body {
   margin: -1px 8px 0 -4px;
   vertical-align: top; }
 
+.flash-alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: opacity 1000ms ease-out 3000ms; }
+  .flash-alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6; }
+  .flash-alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc; }
+  .flash-alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1; }
+  .flash-alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1; }
+  .flash-alert-fade-out {
+    opacity: 0; }
+  .flash-alert-link {
+    font-weight: 700; }
+    .flash-alert-link-link-success {
+      color: #2b542c; }
+    .flash-alert-link-link-warning {
+      color: #66512c; }
+    .flash-alert-link-link-danger {
+      color: #843534; }
+    .flash-alert-link-link-info {
+      color: #245269; }
+
 .timeline-header {
   background: white;
   height: 6rem;
   position: fixed;
   top: 0;
-  transition: top 0.2s ease-in-out;
+  transition: top 300ms ease-in-out;
   width: 100%;
   display: flex;
   padding: 2% 5% 2% 0;
@@ -295,4 +330,4 @@ body {
   width: 50%; }
 
 .timeline-container {
-  padding-top: 6rem; }
+  padding-top: 7rem; }
