@@ -54,14 +54,14 @@ def setup():
         try:
             saved_flock = flock.save_to_db()
         except:
-            print('Error saving flock to database.', flush=True)
+            flash('There was an issue saving this flock, please try again.', 'danger')
 
         # Save latest flock to user
         user.last_flock_id = saved_flock.flock_id
         try:
             saved_user = user.save_to_db()
         except:
-            print('Error saving last flock to user in database.')
+            flash('There was an issue saving this flock, please try again.', 'danger')
 
         flash(f'Flock "{flock_name}" has been saved.', 'success')
         # Turn the received IDs back into "Friend objects" from DB to re-render

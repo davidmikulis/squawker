@@ -296,32 +296,63 @@ body {
 .user-profile__verified {
   color: blue; }
 
-.setup-users-actions {
-  position: sticky;
+.site-navbar {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: gray;
+  background: white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 10vh; }
+  .site-navbar-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 5%; }
+
+.setup-users-actions {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   width: 100%;
   height: 5rem;
-  top: 0; }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: gray; }
   .setup-users-actions__button {
     height: 75%;
     padding: 3px; }
 
 .setup-users-name {
-  width: 100%;
-  position: sticky;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: lightgray;
-  top: 5rem; }
+  width: 100%;
+  height: 2rem;
+  position: fixed;
+  top: 5rem;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: lightgray; }
 
 .setup-users-container {
   display: flex;
   margin-top: 1px;
-  border-top: 1px solid lightgray; }
+  border-top: 1px solid lightgray;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 7rem;
+  bottom: 10vh;
+  overflow: auto; }
 
 .available-users-container {
   width: 50%; }

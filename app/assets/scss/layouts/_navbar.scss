@@ -1,0 +1,23 @@
+.site-navbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    background: $color-white;
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    width: 100%;
+    height: $navbar-height;
+
+    &-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
+        padding: 5%;
+    }
+}

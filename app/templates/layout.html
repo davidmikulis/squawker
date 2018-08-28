@@ -5,12 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Flask App</title>
-    <link rel="icon" href="../static/favicon/favicon.ico">
+    <title>Squawker</title>
+    <link rel="icon" href="../static/favicon/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="../static/css/style.css">
 </head>
 
@@ -18,8 +17,8 @@
     <div class="site-container">
         {% include 'includes/messages/_messages.html' %}
         {% block body %}{% endblock %}
+        {% include 'includes/navbar/_navbar.html' %}
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
 </body>
 
 </html>
