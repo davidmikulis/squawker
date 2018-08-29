@@ -64,18 +64,18 @@ class ButtonSubmit {
         throw new Error(response.status);
     }
 
-    static getChosenUsers() {
+    static getChosenFriends() {
         return Array.from(document.getElementById('chosen-users-container').children).map(child => child.id);
     }
 
-    static getAvailableUsers() {
+    static getAvailableFriends() {
         return Array.from(document.getElementById('available-users-container').children).map(child => child.id);
     }
 
-    static createHiddenForm(action) {
+    static createHiddenForm(action, method) {
         const form = document.createElement('form');
-        form.setAttribute('id', action+'-button-post');
-        form.setAttribute('method', 'post');
+        form.setAttribute('id', action+'-button-'+method);
+        form.setAttribute('method', method);
         form.style.setProperty('display', 'none');
         document.body.appendChild(form);
         return form;
@@ -91,22 +91,21 @@ class ButtonSubmit {
 
     static saveButton() {
         if (!document.getElementById('background').classList.contains('background--active')) {
-            const form = this.createHiddenForm('save');
             const inputName = document.getElementById('setup-users-name-input').value;
             if (!inputName) {
                 alert('Flock Name must be specified.');
                 return;
             }
-            const name = this.createHiddenInput('name', inputName, form);
-            const chosenUsersIds = this.getChosenUsers();
+            const form = this.createHiddenForm('save', 'post');
+            this.createHiddenInput('flock_name', inputName, form);
+            const chosenUsersIds = this.getChosenFriends();
             if (chosenUsersIds.length < 1) {
                 alert('Must choose at least one user.');
                 return;
-            } 
-            const chosenFriends = this.createHiddenInput(
-                'chosen_friends', JSON.stringify(chosenUsersIds), form);
-            const availableFriends = this.createHiddenInput(
-                'available_friends', JSON.stringify(this.getAvailableUsers()), form);
+            }
+            this.createHiddenInput('procedure', 'save', form);
+            this.createHiddenInput('chosen_friends', JSON.stringify(chosenUsersIds), form);
+            this.createHiddenInput('available_friends', JSON.stringify(this.getAvailableFriends()), form);
             form.submit();
         }
     }
@@ -116,6 +115,7 @@ class ButtonSubmit {
             const chosenUsers = Array.from(document.getElementById('chosen-users-container').children);
             const availableColumn = document.getElementById('available-users-container');
             chosenUsers.forEach(user => availableColumn.appendChild(user));
+            document.getElementById('setup-users-name-input').value = '';
         }
     }
 
@@ -156,7 +156,7 @@ class ButtonSubmit {
                     const button = document.createElement('button');
                     button.classList.add('setup-users-actions__button', 'button-purple');
                     button.innerText = 'Edit Flock';
-                    button.addEventListener('click', ButtonSubmit.confirmLoadButton);
+                    button.addEventListener('click', ButtonSubmit.confirmLoadButton.bind(ButtonSubmit));
                     button.setAttribute('id', flock);
                     item.appendChild(button);
                 });
@@ -171,8 +171,12 @@ class ButtonSubmit {
         const container = document.getElementById('setup-current-flocks');
         background.classList.remove('background--active');
         container.classList.remove('setup-current-flocks--visible');
-        console.log(e.currentTarget.getAttribute('id'));
-        // Send 'GET' to server to get details of specific flock (available_users, chosen_users)
+        const form = this.createHiddenForm('edit', 'post');
+        this.createHiddenInput('procedure', 'load', form);
+        this.createHiddenInput('flock_name', e.currentTarget.getAttribute('id'), form);
+        const allFriends = this.getChosenFriends().concat(this.getAvailableFriends())
+        this.createHiddenInput('all_friends', JSON.stringify(allFriends), form)
+        form.submit();
     }
     
 }
@@ -181,7 +185,10 @@ const setupFlashAlertFade = () => {
     const alerts = document.getElementsByClassName('flash-alert');
     if (alerts.length > 0) {
         for (let i = 0; i < alerts.length; i++) {
-            alerts[i].addEventListener('transitionend', () => element.style.setProperty('display', 'none'));
+            alerts[i].addEventListener('transitionend', (e) => {
+                console.log(e);
+                element.style.setProperty('display', 'none');
+            });
             alerts[i].classList.add('flash-alert-fade-out');
         }
     }

@@ -36,43 +36,69 @@ class Setup():
 @app.route('/setup', methods=['GET', 'POST'])
 def setup():
     if request.method == 'POST':
-        flock_name = request.form.get('name', '')
-        available_friend_ids = json.loads(request.form.get('available_friends', '[]'))
-        chosen_friend_ids = json.loads(request.form.get('chosen_friends', '[]'))
+        key = session.get('access_token', None)
+        secret = session.get('access_token_secret', None)
+        if key is None or secret is None:
+                return redirect(url_for('login'))
+        procedure = request.form.get('procedure')
+        flock_name = request.form.get('flock_name', '')
+        if flock_name == '':
+            flash('Flock name must be provided.', 'danger')
+            return redirect(url_for('setup'))
 
         # Get user from DB for user ID
         user = UserModel.find_by_access_token(session.get('access_token'))
         user_id = user.user_id
 
-        # Save flock to DB
+        # Get flock from DB
         flock = FlockModel.find_by_name(user_id, flock_name)
-        if flock is not None:
-            flock.config = {'chosen_friend_ids': chosen_friend_ids}
-        else:
-            flock = FlockModel(user_id, flock_name, {'chosen_friend_ids': chosen_friend_ids})
 
-        try:
-            saved_flock = flock.save_to_db()
-        except:
-            flash('There was an issue saving this flock, please try again.', 'danger')
+        if procedure == 'save':
+            available_friend_ids = json.loads(request.form.get('available_friends', '[]'))
+            chosen_friend_ids = json.loads(request.form.get('chosen_friends', '[]'))
+            if flock is not None:
+                flock.config = {'chosen_friend_ids': chosen_friend_ids}
+            else:
+                flock = FlockModel(user_id, flock_name, {'chosen_friend_ids': chosen_friend_ids})
 
-        # Save latest flock to user
-        user.last_flock_id = saved_flock.flock_id
-        try:
-            saved_user = user.save_to_db()
-        except:
-            flash('There was an issue saving this flock, please try again.', 'danger')
+            try:
+                saved_flock = flock.save_to_db()
+            except:
+                flash('There was an issue saving this flock, please try again.', 'danger')
 
-        flash(f'Flock "{flock_name}" has been saved.', 'success')
-        # Turn the received IDs back into "Friend objects" from DB to re-render
-        # Can refactor later to use session to avoid DB call
-        available_friends = FriendModel.find_by_id_str_list(available_friend_ids)
-        chosen_friends = FriendModel.find_by_id_str_list(chosen_friend_ids)
+            # Save latest flock to user
+            user.last_flock_id = saved_flock.flock_id
+            try:
+                saved_user = user.save_to_db()
+            except:
+                flash('There was an issue saving this flock, please try again.', 'danger')
+
+            flash(f'Flock "{flock_name}" has been saved.', 'success')
+            # Turn the received IDs back into "Friend objects" from DB to re-render
+            # Can refactor later to use session to avoid DB call
+            available_friends = FriendModel.find_by_id_str_list(available_friend_ids)
+            chosen_friends = FriendModel.find_by_id_str_list(chosen_friend_ids)
+
+        if procedure == 'load':
+            all_friend_ids = json.loads(request.form.get('all_friends', '[]'))
+            # Update user and save to DB
+            user.last_flock_id = flock.flock_id
+
+            try:
+                saved_user = user.save_to_db()
+            except:
+                flash('Error retrieving flock data.', 'danger')
+
+            chosen_friend_ids = flock.chosen_ids()
+            available_friend_ids = [id for id in all_friend_ids if id not in chosen_friend_ids]
+            available_friends = FriendModel.find_by_id_str_list(available_friend_ids)
+            chosen_friends = FriendModel.find_by_id_str_list(chosen_friend_ids)
+
 
         return render_template('setup.html', 
             available_friends=available_friends, 
             chosen_friends=chosen_friends,
-            flock_name=saved_flock.name,
+            flock_name=flock_name,
             home_selected='',
             setup_selected='-selected',
             about_selected=''
