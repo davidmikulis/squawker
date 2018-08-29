@@ -4,7 +4,6 @@
     <button class="setup-users-actions__button button-green" id="action-button-save">Save settings</button>
     <button class="setup-users-actions__button button-red" id="action-button-clear">Clear settings</button>
     <button class="setup-users-actions__button button-purple" id="action-button-load">My Flocks</button>
-    <button class="setup-users-actions__button button-blue" id="action-button-timeline">Go to Timeline</button>
 </div>
 <div class="setup-users-name">
     <label for="flock-name">Flock Name</label>
@@ -22,5 +21,8 @@
         {% endfor %}
     </div>
     <script src="../static/js/setupProcessing.js"></script>
+</div>
+<div class="setup-current-flocks" id="setup-current-flocks">
+    {# Elements are dynamically generated here #}
 </div>
 {% endblock %}

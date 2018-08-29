@@ -110,5 +110,8 @@ def timeline():
     return render_template('timeline.html', 
         tweets=processed_tweets, 
         my_profile_picture=my_profile_picture,
-        flock_name=flock_name
+        flock_name=flock_name,
+        home_selected='-selected',
+        setup_selected='',
+        about_selected=''
         )

@@ -72,7 +72,10 @@ def setup():
         return render_template('setup.html', 
             available_friends=available_friends, 
             chosen_friends=chosen_friends,
-            flock_name=saved_flock.name
+            flock_name=saved_flock.name,
+            home_selected='',
+            setup_selected='-selected',
+            about_selected=''
             )
 
     if request.method == 'GET':
@@ -124,5 +127,8 @@ def setup():
         return render_template('setup.html', 
             available_friends=available_friends, 
             chosen_friends=chosen_friends, 
-            flock_name=flock_name
+            flock_name=flock_name,
+            home_selected='',
+            setup_selected='-selected',
+            about_selected=''
             )

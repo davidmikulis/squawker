@@ -90,45 +90,89 @@ class ButtonSubmit {
     }
 
     static saveButton() {
-        const form = this.createHiddenForm('save');
-        const inputName = document.getElementById('setup-users-name-input').value;
-        if (!inputName) {
-            alert('Flock Name must be specified.');
-            return;
+        if (!document.getElementById('background').classList.contains('background--active')) {
+            const form = this.createHiddenForm('save');
+            const inputName = document.getElementById('setup-users-name-input').value;
+            if (!inputName) {
+                alert('Flock Name must be specified.');
+                return;
+            }
+            const name = this.createHiddenInput('name', inputName, form);
+            const chosenUsersIds = this.getChosenUsers();
+            if (chosenUsersIds.length < 1) {
+                alert('Must choose at least one user.');
+                return;
+            } 
+            const chosenFriends = this.createHiddenInput(
+                'chosen_friends', JSON.stringify(chosenUsersIds), form);
+            const availableFriends = this.createHiddenInput(
+                'available_friends', JSON.stringify(this.getAvailableUsers()), form);
+            form.submit();
         }
-        const name = this.createHiddenInput('name', inputName, form);
-        const chosenUsersIds = this.getChosenUsers();
-        if (chosenUsersIds.length < 1) {
-            alert('Must choose at least one user.');
-            return;
-        } 
-        const chosenFriends = this.createHiddenInput(
-            'chosen_friends', JSON.stringify(chosenUsersIds), form);
-        const availableFriends = this.createHiddenInput(
-            'available_friends', JSON.stringify(this.getAvailableUsers()), form);
-        form.submit();
     }
 
     static clearButton() {
-        const chosenUsers = Array.from(document.getElementById('chosen-users-container').children);
-        const availableColumn = document.getElementById('available-users-container');
-        chosenUsers.forEach(user => availableColumn.appendChild(user));
+        if (!document.getElementById('background').classList.contains('background--active')) {
+            const chosenUsers = Array.from(document.getElementById('chosen-users-container').children);
+            const availableColumn = document.getElementById('available-users-container');
+            chosenUsers.forEach(user => availableColumn.appendChild(user));
+        }
+    }
+
+
+    static async getFlockNames() {
+        const user_id = localStorage.getItem('squawker-stay-logged-in');
+        const access_token = localStorage.getItem('squawker-stay-logged-in-token');
+        const url = `http://127.0.0.1:5000/get/flock_names?user_id=${user_id}&access_token=${access_token}`;
+        try {
+            const response = await fetch(url);
+            return await response.json();
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     static loadButton() {
-        // Send 'GET' to server to get list of flocks in DB
-        const user_id = localStorage.getItem('squawker-stay-logged-in');
-        const access_token = localStorage.getItem('squawker-stay-logged-in-token');
-        const url = `http://127.0.0.1:5000/get/flock_names/${user_id}/${access_token}`;
-        this.fetch(url).then(data => console.log(data.flock_names));
+        const background = document.getElementById('background');
+        if (!background.classList.contains('background--active')) {
+            this.getFlockNames()
+            .then(data => {
+                const container = document.getElementById('setup-current-flocks');
+                const head = document.createElement('div');
+                head.classList.add('setup-current-flocks-header');
+                const headText = document.createElement('div');
+                headText.classList.add('setup-current-flocks-header-text');
+                head.appendChild(headText);
+                headText.innerText = 'My Flocks';
+                container.appendChild(head);
+                data.flock_names.forEach(flock => {
+                    const item = document.createElement('div');
+                    item.classList.add('setup-current-flocks-item');
+                    const text = document.createElement('div');
+                    text.classList.add('setup-current-flocks-item-text');
+                    text.innerText = flock;
+                    container.appendChild(item);
+                    item.appendChild(text);
+                    const button = document.createElement('button');
+                    button.classList.add('setup-users-actions__button', 'button-purple');
+                    button.innerText = 'Edit Flock';
+                    button.addEventListener('click', ButtonSubmit.confirmLoadButton);
+                    button.setAttribute('id', flock);
+                    item.appendChild(button);
+                });
+                container.classList.add('setup-current-flocks--visible');
+                background.classList.add('background--active');
+            });
+        }
     }
 
-    static confirmLoadButton() {
+    static confirmLoadButton(e) {
+        const background = document.getElementById('background');
+        const container = document.getElementById('setup-current-flocks');
+        background.classList.remove('background--active');
+        container.classList.remove('setup-current-flocks--visible');
+        console.log(e.currentTarget.getAttribute('id'));
         // Send 'GET' to server to get details of specific flock (available_users, chosen_users)
-    }
-
-    static timelineButton() {
-        // Send 'GET' to server to get list of flocks in DB
     }
     
 }
@@ -146,7 +190,7 @@ const setupFlashAlertFade = () => {
 window.onload = function() {
     const clickableProfiles = document.querySelectorAll('div.user-profile-container');
     clickableProfiles.forEach(profile => profile.addEventListener('click', toggleButton));
-    ['save', 'clear', 'load', 'timeline'].forEach(name => 
+    ['save', 'clear', 'load'].forEach(name => 
         document.getElementById('action-button-'+name).addEventListener('click', ButtonSubmit[name+'Button'].bind(ButtonSubmit))
     );
 

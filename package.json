@@ -4,7 +4,8 @@
   "description": "Squawker organizes your Twitter timeline into categories.",
   "main": "index.js",
   "scripts": {
-    "compile-sass": "node-sass app/assets/scss/style.scss app/static/css/style.css -w",
+    "watch-sass": "node-sass app/assets/scss/style.scss app/static/css/style.css -w",
+    "compile-sass": "node-sass app/assets/scss/style.scss app/static/css/style.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

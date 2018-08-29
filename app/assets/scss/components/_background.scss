@@ -1,0 +1,19 @@
+.background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: $color-background;
+    z-index: 0;
+    opacity: 0;
+
+    transition: opacity 300ms linear;
+
+    &--active {
+        opacity: 1;
+        z-index: 20;
+    }
+}

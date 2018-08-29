@@ -21,11 +21,13 @@ def user(user_id, access_token):
     return json.dumps(user.json_me())
 
 # Flock Names
-@app.route('/get/flock_names/<string:user_id>/<string:access_token>')
-def flock_names(user_id, access_token):
-    deobf_user_id = deobfuscate_user_id(user_id, app.secret_key)
+@app.route('/get/flock_names')
+def flock_names():
+    print(str(request.args), flush=True)
+    deobf_user_id = deobfuscate_user_id(request.args.get('user_id'), app.secret_key)
+    access_token = request.args.get('access_token')
     user = UserModel.find_by_id_and_token(deobf_user_id, access_token)
-
+    print(access_token == session.get('access_token'), flush=True)
     if user is None:
         response = {
             "error": "User not found."
