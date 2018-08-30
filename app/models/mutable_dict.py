@@ -1,4 +1,3 @@
-from app import db
 import json
 import sqlalchemy
 from sqlalchemy.types import TypeDecorator
@@ -6,7 +5,7 @@ from sqlalchemy.ext.mutable import Mutable
 
 
 class JSONEncodedDict(TypeDecorator):
-    impl = sqlalchemy.Text(4096)
+    impl = sqlalchemy.Text()
 
     def process_bind_param(self, value, dialect):
         if value is not None:
