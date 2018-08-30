@@ -14,8 +14,8 @@ from app.utils.obfuscator import deobfuscate_user_id
 
 # Landing page - check if user is in the database
 
-@app.route('/is_logged_in/<string:user_id>/<string:access_token>/')
-def is_logged_in(user_id, access_token):
+@app.route('/is_logged_in')
+def is_logged_in():
     user_id = request.args.get('user_id')
     access_token = request.args.get('access_token')
     deobf_user_id = deobfuscate_user_id(user_id, app.secret_key)
@@ -25,4 +25,4 @@ def is_logged_in(user_id, access_token):
     if user is not None:
         return redirect(url_for('timeline', user=user))
     else:
-        return redirect(url_for('login'))
+        return redirect(url_for('about'))

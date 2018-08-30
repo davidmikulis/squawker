@@ -5,3 +5,4 @@ Flask-CORS
 SQLAlchemy
 uwsgi
 psycopg2
+tweepy

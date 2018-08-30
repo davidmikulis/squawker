@@ -1,6 +1,6 @@
 # Basic Flask
 from flask import Flask
-
+import os
 # SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
 
