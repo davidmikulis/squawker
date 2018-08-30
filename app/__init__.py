@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 # Load application configuration
 app.config.from_pyfile('config.cfg')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 # app.secret_key = os.urandom(32)
 db = SQLAlchemy(app)
 
