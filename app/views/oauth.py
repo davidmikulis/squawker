@@ -75,8 +75,8 @@ def get_oauth_access_token():
         print('Error occured saving user to database', flush=True)
 
     obf_user_id = obfuscate_user_id(saved_user.user_id, app.secret_key)
-    # Save User ID and Access Token to local storage and redirect to setup
-    return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='setup'))
+    # Save User ID and Access Token to local storage and redirect to about
+    return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='about'))
 
 
 @app.route('/denied')

@@ -7,6 +7,7 @@
 
 html {
   font-size: 62.5%;
+  line-height: 1.2;
   font-family: 'Roboto', sans-serif; }
 
 body {
@@ -180,7 +181,10 @@ body {
   position: absolute;
   z-index: 25;
   left: 0;
+  right: 0;
   top: 0;
+  width: 50vw;
+  margin: 0 auto;
   transition: opacity 1000ms ease-out 3000ms; }
   .flash-alert-success {
     color: #3c763d;
@@ -333,6 +337,68 @@ body {
     align-items: center;
     flex-grow: 1;
     padding: 5%; }
+
+.about-container {
+  background: lightgray;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 10vh;
+  overflow: auto; }
+
+.about-title {
+  width: 95%;
+  margin: 0 auto;
+  background: #460ac8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: skewX(5deg); }
+  .about-title-text {
+    font-size: 3rem;
+    color: white;
+    transform: skewX(-5deg);
+    padding: 2rem; }
+
+.about-section-title {
+  background: #460ac8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: skewX(5deg);
+  margin: 1rem; }
+  .about-section-title-text {
+    font-size: 2.5rem;
+    color: white;
+    transform: skewX(-5deg);
+    padding: 1rem; }
+
+.about-info {
+  width: 95%;
+  margin: 0 auto; }
+  .about-info-item {
+    background: #8c73c8;
+    transform: skewX(5deg);
+    height: auto;
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; }
+    .about-info-item-text {
+      transform: skewX(-5deg);
+      font-size: 2rem;
+      padding: 2rem; }
+  .about-info-login-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+    width: 100%; }
+    .about-info-login-button-container img {
+      width: 150%;
+      height: 150%; }
 
 .setup-users-actions {
   display: flex;

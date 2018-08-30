@@ -1,1 +1,1 @@
-__all__ = ["is_logged_in", "landing", "login", "oauth", "setup", "timeline", "redirects", "gets"]
+__all__ = ['is_logged_in', 'landing', 'login', 'oauth', 'setup', 'timeline', 'about', 'redirects', 'gets']

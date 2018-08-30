@@ -1,0 +1,74 @@
+{% extends 'layout.html' %} {% block body %}
+<div class="about-container">
+<div class="about-title">
+    <div class="about-title-text">
+        Welcome to Squawker!
+    </div>
+</div>
+<div class="about-info">
+    <div class="about-section-title">
+        <p class="about-section-title-text">
+            Background
+        </p>
+    </div>
+    <div class="about-info-intro about-info-item">
+        <p class="about-info-intro-text about-info-item-text">
+            Squawker is a web-based application that allows you to divide your Twitter timeline into categories based on who you follow.
+            For example, you can group the people you follow into "news", "sports", "friends", and any other category you
+            might think of! 
+        </p>
+        <p class="about-info-intro-text about-info-item-text">
+            Your timeline is filtered to only show tweets from whichever category you want to see.
+        </p>
+    </div>
+    <div class="about-section-title">
+        <p class="about-section-title-text">
+            Login
+        </p>
+    </div>
+    <div class="about-info-login about-info-item {{is_logged_in}}">
+        <p class="about-info-login-text about-info-item-text">
+            To get started, sign into Twitter using the button below. This will redirect you to Twitter's login page.
+        </p>
+        <div class="about-info-login-button-container">
+            <a href="/request_token" class="about-info-login-button">
+                <img src="../static/images/sign-in.png" alt="Twitter Login Button">
+            </a>
+        </div>
+    </div>
+    <div class="about-section-title">
+        <p class="about-section-title-text">
+            Returning User
+        </p>
+    </div>
+    <div class="about-info-here-before about-info-item">
+        <p class="about-info-here-before-text about-info-item-text">
+            Been here before? If you've been here before on a different browser or have cleared your cookies, Squawker will remember
+            the setup you've created before. Just sign into Twitter and your previous settings will be restored.
+        </p>
+    </div>
+    <div class="about-section-title">
+        <p class="about-section-title-text">
+            Data & Privacy
+        </p>
+    </div>
+    <div class="about-info-privacy about-info-item">
+        <p class="about-info-privacy-text about-info-item-text">
+            No personal data is collected by this application. Login credentials are given directly to Twitter using the secure OAuth
+            protocol and your information is never shared with this application. For more information on the OAuth protocal
+            used by Twitter, <a href="https://oauth.net/" target="_blank">please read here</a>.
+        </p>
+    </div>
+    <div class="about-section-title">
+        <p class="about-section-title-text">
+            Source Code
+        </p>
+    </div>
+    <div class="about-info-repository about-info-item">
+        <p class="about-info-repository-text about-info-item-text">
+            Check out the source code for this application on Github!
+        </p>
+    </div>
+</div>
+</div>
+{% endblock %}

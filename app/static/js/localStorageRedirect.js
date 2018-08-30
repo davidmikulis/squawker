@@ -6,6 +6,8 @@ if (dataElement.getAttribute('redirect') === 'timeline') {
     window.location.replace(`${window.location.origin}/t`);
 } else if (dataElement.getAttribute('redirect') === 'setup') {
     window.location.replace(`${window.location.origin}/setup`);
+} else if (dataElement.getAttribute('redirect') === 'about') {
+    window.location.replace(`${window.location.origin}/about`);
 } else {
     alert('did not work');
 }

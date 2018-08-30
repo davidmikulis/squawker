@@ -7,7 +7,10 @@
     position: absolute;
     z-index: 25;
     left: 0;
+    right: 0;
     top: 0;
+    width: 50vw;
+    margin: 0 auto;
 
     transition: opacity 1000ms ease-out 3000ms;
 
