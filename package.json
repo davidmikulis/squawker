@@ -18,8 +18,8 @@
     "url": "https://github.com/davidmikulis/squawker/issues"
   },
   "homepage": "https://github.com/davidmikulis/squawker#readme",
-  "devDependencies": {
-    "node-sass": "^5.0.0"
-  },
-  "dependencies": {}
+  "devDependencies": {},
+  "dependencies": {
+    "sass": "^1.34.1"
+  }
 }
