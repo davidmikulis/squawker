@@ -1,5 +1,5 @@
 # Squawker
-## Introduction
+
 Squawker is a web application that allows a Twitter user to organize the people they follow into groups (known as "flocks") and view their timeline filtered by these groups. For example, a user may create a flock for "news" and another for "sports".
 
 ## How it's made
@@ -13,10 +13,12 @@ This application is created in the Python language using the Flask micro-framewo
 ## Data Protection
 No personal data is gathered in this application. The user logs in with Twitter directly using the OAuth workflow.
 
-## Roadmap (Future Features)
+## Potential Future Features
+
+Below are features that could be added to further enhance the application.
 
 ### Setup Page:
-* Alphabetize your friends by (screen_name) or (name) 
+* Alphabetize your friends by (screen_name) or (name)
 * When moving a friend from right to left, they go back to their alphabetized location
 * Animate the friends below "sliding up" to fill the space when a friend moves to the other side
 
