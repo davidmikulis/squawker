@@ -4,8 +4,6 @@ import json
 # Library to assist with Twitter APIs
 import tweepy
 
-# Obfuscation of key and secret
-from app.utils.obfuscator import deobfuscate_str
 
 from app.models.user import UserModel
 from app.models.flock import FlockModel
@@ -110,10 +108,8 @@ def setup():
         secret = session.get('access_token_secret', None)
         if key is None or secret is None:
             return redirect(url_for('login'))
-        
-        deobf_key = deobfuscate_str(key, app.secret_key)
-        deobf_secret = deobfuscate_str(secret, app.secret_key)
-        auth.set_access_token(deobf_key, deobf_secret)
+
+        auth.set_access_token(key, secret)
         api = tweepy.API(auth)
 
         # Gather list of all IDs for friends to show
@@ -150,11 +146,11 @@ def setup():
             flock_name = ''
 
         # Pass list of "User" object friends to HTML
-        return render_template('setup.html', 
-            available_friends=available_friends, 
-            chosen_friends=chosen_friends, 
+        return render_template('setup.html',
+            available_friends=available_friends,
+            chosen_friends=chosen_friends,
             flock_name=flock_name,
             home_selected='',
             setup_selected='-selected',
             about_selected=''
-            )
+        )

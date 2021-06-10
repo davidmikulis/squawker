@@ -7,9 +7,6 @@ import tweepy
 # Save our user to the database
 from app.models.user import UserModel
 
-# Obfuscate the key and secret
-from app.utils.obfuscator import obfuscate_str
-from app.utils.obfuscator import obfuscate_user_id
 
 # Initiates OAuth process. User won't see this page
 @app.route('/request_token')
@@ -46,37 +43,30 @@ def get_oauth_access_token():
     except tweepy.TweepError:
         print('Error! Failed to get access token.', flush=True)
 
-    # Obfuscate the token and secret
-    obf_access_token = obfuscate_str(auth.access_token, app.secret_key)
-    obf_access_token_secret = obfuscate_str(auth.access_token_secret, app.secret_key)
-
     # Store the token and secret in the session
-    session['access_token'] = obf_access_token
-    session['access_token_secret'] = obf_access_token_secret
+    session['access_token'] = auth.access_token
+    session['access_token_secret'] = auth.access_token_secret
 
     # Check if this user has used the app before
-    user = UserModel.find_by_access_token(obf_access_token)
+    user = UserModel.find_by_access_token(auth.access_token)
     if user is not None and user.last_flock_id:
         # User has used this app before but on a different browser/cleared local storage
-        obf_user_id = obfuscate_user_id(user.user_id, app.secret_key)
         # Save User ID and Access Token to local storage and redirect to timeline
-        return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='timeline'))
+        return redirect(url_for('save_to_local_storage', access_token=auth.access_token, user_id=user.user_id, redirect='timeline'))
     elif user is not None:
         # User has used this app before but never saved a flock
-        obf_user_id = obfuscate_user_id(user.user_id, app.secret_key)
         # Save User ID and Access Token to local storage and redirect to setup
-        return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='setup'))
-    
+        return redirect(url_for('save_to_local_storage', access_token=auth.access_token, user_id=user.user_id, redirect='setup'))
+
     # User hasn't used this app before
-    new_user = UserModel(obf_access_token, obf_access_token_secret)
+    new_user = UserModel(auth.access_token, auth.access_token_secret)
     try:
         saved_user = new_user.save_to_db()
     except:
         print('Error occured saving user to database', flush=True)
 
-    obf_user_id = obfuscate_user_id(saved_user.user_id, app.secret_key)
     # Save User ID and Access Token to local storage and redirect to about
-    return redirect(url_for('save_to_local_storage', access_token=obf_access_token, user_id=obf_user_id, redirect='about'))
+    return redirect(url_for('save_to_local_storage', access_token=auth.access_token, user_id=user.user_id, redirect='about'))
 
 
 @app.route('/denied')

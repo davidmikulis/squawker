@@ -10,9 +10,6 @@ from datetime import datetime
 # Database models
 from app.models.user import UserModel
 
-# Obfuscator utility
-from app.utils.obfuscator import deobfuscate_str
-
 
 class Timeline():
     def apply_flock_filter(self, raw_tweets, friend_ids):
@@ -63,18 +60,16 @@ class Timeline():
 # Timeline
 @app.route('/t')
 def timeline():
-    obf_key = session.get('access_token', None)
-    obf_secret = session.get('access_token_secret', None)
-    if obf_key is None or obf_secret is None:
+    key = session.get('access_token', None)
+    secret = session.get('access_token_secret', None)
+    if key is None or secret is None:
         return render_template('login.html')
     # Read user from request or search DB
     user = request.args.get('user', None)
     if user is None:
-        user = UserModel.find_by_access_token(obf_key)
+        user = UserModel.find_by_access_token(key)
     # Prepare to use Twitter API
     auth = tweepy.OAuthHandler(app.config['CONSUMER_KEY'], app.config['CONSUMER_SECRET'])
-    key = deobfuscate_str(obf_key, app.secret_key)
-    secret = deobfuscate_str(obf_secret, app.secret_key)
     auth.set_access_token(key, secret)
     api = tweepy.API(auth)
     tl = Timeline()
